@@ -118,7 +118,7 @@ struct Declaration_Type {
 struct Declaration_Struct {
     struct String *struct_name;
     struct Node *fields;
-    long long count;
+    long long count; // If not set: -1
 };
 
 struct Parameter_List {

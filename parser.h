@@ -25,6 +25,11 @@ struct Node *parse_mult( struct Context *context );
 
 struct Node *parse_token( struct Context *context );
 
+struct Node *parse_symbol( struct Context *context );
+
+/**
+ *  OBS: The return might be NULL if no parameters were found.
+ */
 struct Node *parse_parameter_list( struct Context *context );
 
 struct Node *parse_parameter( struct Context *context );

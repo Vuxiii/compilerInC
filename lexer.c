@@ -75,13 +75,24 @@ void next_token( struct Context *context ) {
             context->current_position = p + 1;   
             return;         
         } case ':': {
-            peek_token(context)->left = p - context->file_start;
-            peek_token(context)->right = peek_token(context)->left + 1;
-            peek_token(context)->line = context->current_line;
- 
-            peek_token(context)->token_type = TOKEN_COLON;
-            context->current_position = p + 1;    
-            return;        
+            if (p[1] == ':') {
+                peek_token(context)->left = p - context->file_start;
+                peek_token(context)->right = peek_token(context)->left + 2;
+                peek_token(context)->line = context->current_line;
+    
+                peek_token(context)->token_type = TOKEN_DOUBLE_COLON;
+                context->current_position = p + 2;    
+                return;      
+            } else {
+                peek_token(context)->left = p - context->file_start;
+                peek_token(context)->right = peek_token(context)->left + 1;
+                peek_token(context)->line = context->current_line;
+    
+                peek_token(context)->token_type = TOKEN_COLON;
+                context->current_position = p + 1;    
+                return;        
+            }
+            
         } case ',': {
             peek_token(context)->left = p - context->file_start;
             peek_token(context)->right = peek_token(context)->left + 1;
