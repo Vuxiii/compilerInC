@@ -25,5 +25,11 @@ struct Node *parse_mult( struct Context *context );
 
 struct Node *parse_token( struct Context *context );
 
+struct Node *parse_parameter_list( struct Context *context );
+
+struct Node *parse_parameter( struct Context *context );
+
+struct Node *parse_argument_list( struct Context *context );
+
 struct Node *get_empty_node();
 #endif

@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define WHITE_SPACE 32
+
 void next_token( struct Context *context ) {
     context->current_token_index = context->peek_token_index;
     context->peek_token_index = (context->peek_token_index + 1) % TOKEN_QUEUE_SIZE;

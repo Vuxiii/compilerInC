@@ -39,7 +39,8 @@ enum TOKEN {
     TOKEN_EQ         = 33,
     TOKEN_FALSE      = 34,
     TOKEN_TRUE       = 35,
-
+    TOKEN_STRUCT     = 36, // Compounded type. Just packing.
+    TOKEN_TYPE       = 37, // Enable the user to make their own types. Custom behaviour
 
 
     NODE_COMPOUND_STATEMENT,
@@ -50,10 +51,12 @@ enum TOKEN {
     NODE_VARIABLE_DECLARATION,
     NODE_ARRAY_DECLARATION,
     NODE_TYPE_DECLARATION,
+    NODE_STRUCT_DECLARATION,
     NODE_ASSIGNMENT,
     NODE_ADDRESS_OF,
     NODE_DEREF,
     NODE_BINARY_OPERATION,
+    NODE_PARAMETER_LIST,
 };
 
 enum PRIMITIVE_TYPE {
@@ -108,6 +111,29 @@ struct Declaration_Array {
     long long length;
 };
 
+struct Declaration_Type {
+
+};
+
+struct Declaration_Struct {
+    struct String *struct_name;
+    struct Node *fields;
+    long long count;
+};
+
+struct Parameter_List {
+    struct Node *parameter;
+    struct Node *next;
+};
+
+struct Argument_List {
+
+};
+
+struct Argument {
+
+};
+
 struct Assignment {
     struct Node *lhs;
     struct Node *rhs;
@@ -156,6 +182,12 @@ struct Node {
         struct Declaration_Function function_declaration;
         struct Declaration_Variable variable_declaration;
         struct Declaration_Array array_declaration;
+        struct Declaration_Struct struct_declaration;
+        struct Declaration_Type type_declaration;
+        struct Parameter_List parameter_list; 
+        struct Argument_List argument_list;
+        struct Declaration_Variable parameter;
+        struct Argument argument;
         struct Assignment assignment;
         struct Compound_Statement compound_statement;
         struct Symbol symbol;

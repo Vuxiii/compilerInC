@@ -5,7 +5,7 @@
 #include "token.h"
 
 
-
+#define WHITE_SPACE 32
 
 
 struct Context {

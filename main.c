@@ -10,7 +10,7 @@ struct Node *NODE_BUFFER;
 
 int main(void) {
     NODE_BUFFER = malloc(sizeof(struct Node) * NODE_BUFFER_INITIAL_SIZE);
-    char *input = "fn main() { let var: [2] int;\n let another: int; } $";
+    char *input = "fn main() { let var: [2] int;\n let another: int = 1; } $";
 
     struct Context context = {
         .current_token_index = 0,

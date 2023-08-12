@@ -340,6 +340,50 @@ struct Node *parse_declaration( struct Context *context ) {
             }
         } break;
         case TOKEN_DOUBLE_COLON: {
+             // [4] LET IDENTIFIER :: IDENTIFIER ;
+             // [5] LET IDENTIFIER :: STRUCT { parameter_list } ;
+             next_token(context);
+             switch (current_token(context)->token_type) {
+                case TOKEN_IDENTIFIER: {                     
+                    // [4] LET IDENTIFIER :: IDENTIFIER ;
+                    // TODO: IMPLEMENT ME
+                }
+                case TOKEN_STRUCT: { 
+                    // [5] LET IDENTIFIER :: STRUCT { parameter_list } ;
+                    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_LCURLY, 
+                            .error_string = String(
+                                .str = "Unexpected Token. Expected '{'\n",
+                                .length = 31 ));
+                    next_token(context);
+
+                    struct Node *struct_declaration = get_empty_node();
+
+                    struct Parameter_List *parameter_list = parse_parameter_list(context);
+
+                    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_RCURLY,
+                            .error_string = String(
+                                .str = "Unexpected Token. Expected '}'\n",
+                                .length = 31 ));
+                    next_token(context);
+
+                    struct_declaration->contents.struct_declaration = (struct Declaration_Struct) {
+                        .struct_name = lhs_identifier->data.str,
+                        .fields = parameter_list
+                    };
+
+                    struct_declaration->node_type = NODE_STRUCT_DECLARATION;
+                    struct_declaration->left = lhs_identifier->left;
+                    struct_declaration->right = current_token(context)->right;
+                    struct_declaration->line = lhs_identifier->line;
+                    return struct_declaration;
+                }
+                default: {
+                    emit_error(context, .token = current_token(context), .error_string = String(
+                                .str = "Unexpected Token. Expected one of [ 'identifier' , 'struct' ]\n",
+                                .length = 62 ));
+                }
+
+             }
 
         } break;
         default: {
@@ -351,6 +395,74 @@ struct Node *parse_declaration( struct Context *context ) {
     }
 
     return NULL;
+}
+
+struct Node *parse_parameter_list( struct Context *context ) {
+    
+    if (current_token(context)->token_type == TOKEN_IDENTIFIER) {
+        struct Node *parameter = parse_parameter(context);
+        if (peek_token(context)->token_type == TOKEN_IDENTIFIER) {
+            next_token(context);
+            struct Node *parameter_list = get_empty_node();
+            struct Node *rest_parameter = parse_parameter_list(context);
+            
+            parameter_list->contents.parameter_list = (struct Parameter_List) {
+                .parameter = parameter,
+                .next = rest_parameter
+            };
+
+            parameter_list->left = parameter->left;
+            parameter_list->right = rest_parameter->right;
+            parameter_list->line = parameter->line;
+
+
+            parameter_list->node_type = NODE_PARAMETER_LIST;
+            return parameter_list;
+        }
+        return parameter;
+    }
+
+    return NULL;
+};
+
+struct Node *parse_parameter( struct Context *context ) {
+    // IDENTIFIER : IDENTIFIER 
+    
+    // Current: TOKEN_IDENTIFIER
+    
+    struct Token *lhs = current_token(context);
+
+    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_COLON, .error_string = String(
+                .str = "Unexpected Token trying to parse a Parameter. Expected a ':'\n",
+                .length = 61 ));
+    next_token(context); 
+
+    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_IDENTIFIER, .error_string = String(
+                .str = "Unexpected Token tyring to parse a Parameter. Expected a type\n",
+                .length = 62 ));
+    
+    next_token(context);
+    
+    struct Token *rhs = current_token(context);
+
+    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_SEMICOLON, .error_string = String(
+                .str = "Unexpected Token trying to parse a Parameter. Expected a ';'\n",
+                .length = 61 ));
+
+    next_token(context);
+
+    struct Node *parameter = get_empty_node();
+        
+    parameter->contents.parameter = (struct Declaration_Variable) {
+        .variable_name = lhs->data.str,
+        .variable_type = rhs->data.str
+    };
+
+    parameter->left = lhs->left;
+    parameter->right = current_token(context)->right;
+    parameter->line = lhs->line;
+    parameter->node_type = NODE_VARIABLE_DECLARATION;
+    return parameter;
 }
 
 struct Node *parse_assignment( struct Context *context ) {
