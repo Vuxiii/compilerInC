@@ -48,8 +48,8 @@ struct Node *parse_toplevel_statement( struct Context *context ) {
         default: {
             emit_error(context, 
                         .error_string = String( 
-                            .str = "Unexpected Token.\n",
-                            .length = 19),
+                            .str = "Unexpected top level Token.\n",
+                            .length = 28),
                     .token = current_token(context) );
             return NULL;
         } break;

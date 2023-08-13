@@ -1,4 +1,6 @@
 fn main() {
+    let a: string;
+    a = "Hello World";
     let list: [10] int;
     each (e : list)
 }
