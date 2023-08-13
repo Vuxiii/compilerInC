@@ -719,8 +719,8 @@ struct Node *parse_token( struct Context *context ) {
             struct Node *expr = parse_expression(context);
 
             assert_token_type(context, .which = PEEK, .expected_token = TOKEN_RPAREN, .error_string = String(
-                        .str = "Unexpected Token. Expected ')'\n",
-                        .length = 31 ));
+                        .str = "Unexpected Token while parsing expression. Expected closing ')'\n",
+                        .length = 64 ));
             next_token(context);
             return expr;
         } break;
@@ -774,6 +774,7 @@ struct Node *parse_token( struct Context *context ) {
                 // function call
                 struct Node *function_call = get_empty_node();
                 next_token(context);
+
                 struct Node *arguments = parse_argument_list(context);
 
                 assert_token_type(context, .which = PEEK, .expected_token = TOKEN_RPAREN, .error_string = String(
@@ -800,9 +801,17 @@ struct Node *parse_token( struct Context *context ) {
             // Case [6]
             next_token(context);
             struct Node *addressof = get_empty_node();
+            
+            addressof->left = current_token(context)->left;
+            addressof->line = current_token(context)->line;
+            
             struct Node *addressme = parse_expression(context);
+            
+            addressof->right = addressme->right;
+
             addressof->contents.address_of.expression = addressme;
             addressof->node_type = NODE_ADDRESS_OF;
+            
             return addressof;
         } break;
 
@@ -810,7 +819,14 @@ struct Node *parse_token( struct Context *context ) {
             // Case [7]
             next_token(context);
             struct Node *deref = get_empty_node();
+
+            deref->left = current_token(context)->left;
+            deref->line = current_token(context)->line;
+
             struct Node *derefme = parse_expression(context);
+
+            deref->right = derefme->right;
+
             deref->contents.address_of.expression = derefme;
             deref->node_type = NODE_DEREF;
             return deref;
