@@ -302,6 +302,7 @@ void next_token( struct Context *context ) {
             }
             right++;
         }
+        context->current_position = right;
         
         peek_token(context)->left = left - context->file_start;
         peek_token(context)->right = right - context->file_start;
@@ -310,12 +311,10 @@ void next_token( struct Context *context ) {
         if (is_float) {
             //TODO! IMPLEMENT ME
             
-            context->current_position = right + 1;
         } else {
             // Convert string number to decimal
             long long num = 0;
             int  i   = 1;
-            context->current_position = right + 1;
             while (left != right) {
                 if (*right == '_') {
                     right--;
