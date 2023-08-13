@@ -76,10 +76,8 @@ struct Node *parse_function_declaration( struct Context *context ) {
                                  .str = "Unexpected Token while parsing function declaration. Expected '('\n",
                                  .length = 66));
     
-    // Insert parameter list here
+    struct Node *parameters = parse_parameter_list(context);
 
-    next_token(context);
-    // Current: TOKEN_RPAREN
     assert_token_type(context, .expected_token = TOKEN_RPAREN, .which = CURRENT,
                              .error_string = String( 
                                  .str = "Unexpected Token while prasing function declaration. Expected ')'\n",
@@ -107,7 +105,8 @@ struct Node *parse_function_declaration( struct Context *context ) {
 
     out->contents.function_declaration = (struct Declaration_Function){
         .function_name = func_name, 
-        .body = body
+        .parameters = parameters, // NULL IF ZERO PARAMETERS
+        .body = body // NULL IF NO BODY
     };
     out->node_type = NODE_FN_DECLARATION;
     return out;
@@ -183,7 +182,7 @@ struct Node *parse_statement( struct Context *context ) {
 
                     function_call->contents.function_call = (struct Function_Call) {
                         .lhs = some_statement,
-                        .argument_list = arguments // NULL IF ZERO ARGS
+                        .arguments = arguments // NULL IF ZERO ARGS
                     };
                     some_statement = function_call;
                 } break;
@@ -465,11 +464,10 @@ struct Node *parse_declaration( struct Context *context ) {
 
                     struct Node *parameter_list = parse_parameter_list(context);
 
-                    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_RCURLY,
+                    assert_token_type(context, .which = CURRENT, .expected_token = TOKEN_RCURLY,
                             .error_string = String(
                                 .str = "Unexpected Token while trying to parse a struct declaration. Expected '}'\n",
                                 .length = 74 ));
-                    next_token(context);
 
                     assert_token_type(context, .which = PEEK, .expected_token = TOKEN_SEMICOLON,
                             .error_string = String(
@@ -587,10 +585,6 @@ struct Node *parse_parameter( struct Context *context ) {
     
     struct Token *rhs = current_token(context);
 
-    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_SEMICOLON, .error_string = String(
-                .str = "Unexpected Token trying to parse a Parameter. Expected a ';'\n",
-                .length = 61 ));
-
     next_token(context);
 
     struct Node *parameter = get_empty_node();
@@ -607,10 +601,6 @@ struct Node *parse_parameter( struct Context *context ) {
     return parameter;
 }
 
-struct Node *parse_assignment( struct Context *context ) {
-    
-    return NULL;
-}
 
 struct Node *parse_expression( struct Context *context ) {
     // We can have:
@@ -804,7 +794,7 @@ struct Node *parse_token( struct Context *context ) {
 
                 function_call->contents.function_call = (struct Function_Call) {
                     .lhs = symbol,
-                    .argument_list = arguments // NULL IF ZERO ARGUMENTS
+                    .arguments = arguments // NULL IF ZERO ARGUMENTS
                 };
 
                 function_call->left = symbol->left;

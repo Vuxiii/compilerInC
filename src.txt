@@ -1,9 +1,12 @@
 fn main() {
-    let a: int;
+    let Point :: struct {
+        x: int,
+        y: int
+    };
+    a = 2;
 }
 
-fn calc() {
-    let b: int;
+fn calc( p1: Point, p2: Point ) {
 }
 
 $

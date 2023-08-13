@@ -11,8 +11,6 @@ struct Node *parse_function_declaration( struct Context *context );
 
 struct Node *parse_statement( struct Context *context );
 
-struct Node *parse_assignment( struct Context *context );
-
 struct Node *parse_declaration( struct Context *context );
 
 struct Node *parse_expression( struct Context *context );

@@ -94,7 +94,7 @@ struct Token {
 
 struct Declaration_Function {
     struct String *function_name;
-    struct Node *parameter_list; // NULL if no parameters
+    struct Node *parameters; // NULL if no parameters
     struct Node *body;
 };
 
@@ -124,7 +124,7 @@ struct Declaration_Struct {
 
 struct Function_Call {
     struct Node *lhs;
-    struct Node *argument_list; // NULL if no parameters
+    struct Node *arguments; // NULL if no parameters
 };
 
 struct Parameter_List {
