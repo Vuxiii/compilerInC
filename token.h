@@ -80,11 +80,6 @@ enum PRIMITIVE_TYPE {
 struct Token {
     enum TOKEN token_type;
 
-    // What physical type does the variable contain
-    // i8, u8, f8, f16 ...
-    enum PRIMITIVE_TYPE  literal_type;
-    // DELETE ME. Move me to struct Node
-
     union {
         long long     inum; // 64 bit
         double        fnum; // 64 bit
@@ -104,6 +99,9 @@ struct Declaration_Function {
 };
 
 struct Declaration_Variable {
+    // What physical type does the variable contain
+    // i8, u8, i16, u16, f8, f16 ...
+    enum PRIMITIVE_TYPE literal_type;
     struct String *variable_name;
     struct String *variable_type;
 };
