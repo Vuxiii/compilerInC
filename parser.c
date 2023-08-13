@@ -269,9 +269,71 @@ struct Node *parse_statement( struct Context *context ) {
         } break;
         case TOKEN_WHILE: {
             next_token(context);
-            emit_error(context, .token = peek_token(context), .error_string = String(
-                .str = "Found while :)\n",
-                .length = 15 ) );
+            struct Node *while_node = get_empty_node();
+            while_node->left = current_token(context)->left;
+            while_node->line = current_token(context)->line;
+            
+            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_LPAREN, .error_string = String( 
+                .str = "Unexpected Token while trying to parse a while loop. Missing '('\n", 
+                .length = 65));
+
+            struct Node *guard = parse_expression(context);
+            struct Node *body = parse_statement(context);
+
+            while_node->right = body->right;
+            while_node->node_type = NODE_FOR;
+            while_node->contents.for_loop = (struct For_Loop) {
+                .init = NULL,
+                .advance = NULL,
+                .body = body,
+                .guard = guard,
+            };  
+            some_statement = while_node;
+        } break;
+        case TOKEN_EACH: {
+            next_token(context);
+            struct Node *each_node = get_empty_node();
+            each_node->left = current_token(context)->left;
+            each_node->line = current_token(context)->line;
+
+            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_LPAREN, .error_string = String(
+                .str = "Unexpected Token while trying to parse an Each loop. Expected '('\n",
+                .length = 66 ));
+            next_token(context);
+
+            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_IDENTIFIER, .error_string = String(
+                .str = "Unexpected Token while trying to parse an Each loop. Expected an identifier for the iterator symbol\n",
+                .length = 100 ));
+            next_token(context);
+            struct String *symbol = current_token(context)->data.str;
+
+            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_COLON, .error_string = String(
+                .str = "Unexpected Token while trying to parse an Each loop. Expected ':'\n",
+                .length = 66 ));
+
+            next_token(context);
+            // Current: TOKEN_COLON
+            
+            next_token(context);
+
+            struct Node *container = parse_symbol(context);
+
+            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_RPAREN, .error_string = String(
+                .str = "Unexpected Token while trying to parse an Each loop. Expected closing ')'\n",
+                .length = 74 )); 
+
+            next_token(context);
+
+            struct Node *body = parse_statement(context);
+
+            each_node->contents.each_loop = (struct Each_Loop) {
+                .body = body,
+                .container = container,
+                .iterator_symbol = symbol,
+            };
+
+            each_node->node_type = NODE_EACH;
+            some_statement = each_node;
         } break;
         default: {
             return NULL; // This indicates that there are no more statements
@@ -304,6 +366,7 @@ struct Node *parse_symbol( struct Context *context ) {
     if ( peek_token(context)->token_type == TOKEN_DOT ) {
         next_token(context);
         // Current: '.'
+        next_token(context);
         struct Node *field_access = get_empty_node();
         struct Node *lhs = get_empty_node();
         struct Node *rhs = parse_symbol( context );
@@ -458,7 +521,7 @@ struct Node *parse_declaration( struct Context *context ) {
                     next_token(context);
                     // Current: TOKEN_NUMBER_D
 
-                    struct Token *length = current_token(context);
+                    struct Token length = *current_token(context);
                     
                     assert_token_type(context, .which = PEEK, .expected_token = TOKEN_RBRACKET, .error_string = String(
                                 .str = "Unexpected Token while parsing a let array declaration. Expected a ']'\n",
@@ -478,10 +541,10 @@ struct Node *parse_declaration( struct Context *context ) {
                     array_decl->contents.array_declaration = (struct Declaration_Array){
                         .array_name = lhs_identifier->data.str,
                         .array_type = type->data.str,
-                        .length = length->data.inum
+                        .length = length.data.inum
                     };
                     array_decl->left = lhs_identifier->left;
-                    array_decl->right = length->right;
+                    array_decl->right = length.right;
                     array_decl->line = lhs_identifier->line;
                     array_decl->node_type = NODE_ARRAY_DECLARATION;
                     return array_decl;

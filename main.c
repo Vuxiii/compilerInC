@@ -37,7 +37,7 @@ int main( int argc, char **argv ) {
     struct Context context = {
         .current_token_index = 0,
         .peek_token_index = 0,
-        .current_line = 0,
+        .current_line = 1,
         .current_position = input,
         .file_start = input,
         .filename = String( .str = filename, .length = strlen(filename) )

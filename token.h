@@ -43,6 +43,7 @@ enum TOKEN {
     TOKEN_TYPE       = 37, // Enable the user to make their own types. Custom behaviour
     TOKEN_WHILE      = 38,
     TOKEN_FOR        = 39,
+    TOKEN_EACH       = 40,
 
     NODE_COMPOUND_STATEMENT,
     NODE_FN_DECLARATION,
@@ -61,6 +62,7 @@ enum TOKEN {
     NODE_PARAMETER_LIST,
     NODE_ARGUMENT_LIST,
     NODE_FOR,
+    NODE_EACH,
     NODE_SCOPE,
 };
 
@@ -130,6 +132,11 @@ struct For_Loop {
     struct Node *guard;
     struct Node *advance;   // NULLABLE
     struct Node *body;
+};
+struct Each_Loop {
+    struct Node   *container;
+    struct String *iterator_symbol;
+    struct Node   *body;
 };
 
 struct Function_Call {
@@ -214,6 +221,7 @@ struct Node {
         struct Expression               deref;
         struct Binary_Operation         binary_operation;
         struct For_Loop                 for_loop;
+        struct Each_Loop                each_loop;
         struct Expression               scope;
     } contents;
     

@@ -1,13 +1,6 @@
 fn main() {
-    let sum: int = 0;
-    for ( 
-            let i: int = b; 
-            i < a; 
-            i = i + c;
-        ) {
-            sum = sum + i;
-        }
-    
+    let list: [10] int;
+    each (e : list)
 }
 
 fn calc( p1: Point, p2: Point ) p1 = p2;
