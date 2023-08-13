@@ -254,6 +254,20 @@ void next_token( struct Context *context ) {
         }
     }
 
+    // For length 4
+    if (p[0] == 'e' && p[1] == 'a' && p[2] == 'c' && p[3] == 'h') {
+        if (p[4] <= WHITE_SPACE || is_valid_identifier_char(p[4]) == 0) {
+            // It is a TOKEN_EACH
+            peek_token(context)->left  = p - context->file_start;
+            peek_token(context)->right = peek_token(context)->left + 4;
+            peek_token(context)->line  = context->current_line;
+
+            peek_token(context)->token_type = TOKEN_EACH;
+            context->current_position = p + 4;
+            return;
+        }
+    }
+
     // For length 5
     if (p[0] == 'w' && p[1] == 'h' && p[2] == 'i' && p[3] == 'l' && p[4] == 'e') {
         if (p[5] <= WHITE_SPACE || is_valid_identifier_char(p[5]) == 0) {
@@ -295,10 +309,13 @@ void next_token( struct Context *context ) {
 
         if (is_float) {
             //TODO! IMPLEMENT ME
+            
+            context->current_position = right + 1;
         } else {
             // Convert string number to decimal
             long long num = 0;
             int  i   = 1;
+            context->current_position = right + 1;
             while (left != right) {
                 if (*right == '_') {
                     right--;
@@ -316,7 +333,6 @@ void next_token( struct Context *context ) {
 
         }
         
-        context->current_position = right + 1;
         return;
     }
 
