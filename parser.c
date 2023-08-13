@@ -707,7 +707,7 @@ struct Node *parse_token( struct Context *context ) {
     // [2] TOKEN_NUMBER_D
     // [3] TOKEN_NUMBER_F
     // [4] TOKEN_STRING
-    // [5] parse_symbol
+    // [5] parse_symbol ?( ?argument_list ?)
     // [6] TOKEN_AND parse_expression
     // [7] TOKEN_TIMES parse_expression
     // [8] TOKEN_FALSE
