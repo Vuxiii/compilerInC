@@ -1,4 +1,5 @@
 #include "lexer.h"
+#include "token.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,7 +17,26 @@ void next_token( struct Context *context ) {
     char *p = context->current_position;
     // Check for Keywords
     switch (p[0]) {
-        case '(': {
+        case '"': {
+            char *left  = p+1;
+            char *right = p+1;
+
+            while (*right != '"') {
+                if (*right == '\\')
+                    right++;
+                right++;
+            }
+            right++;
+            peek_token(context)->left  = p      - context->file_start;
+            peek_token(context)->right = right  - context->file_start;
+            peek_token(context)->line  = context->current_line;
+            peek_token(context)->token_type = TOKEN_STRING;
+            
+            context->current_position = right;
+            
+            peek_token(context)->data.str = get_string_from(left, right);
+            return;
+        } case '(': {
 
             peek_token(context)->left = p - context->file_start;
             peek_token(context)->right = peek_token(context)->left + 1;
@@ -164,6 +184,38 @@ void next_token( struct Context *context ) {
             peek_token(context)->token_type = TOKEN_EOP;
             context->current_position = p + 1;
             return;      
+        } case '&': {
+            if (p[1] == '&') {
+                peek_token(context)->left = p - context->file_start;
+                peek_token(context)->right = peek_token(context)->left + 2;
+                peek_token(context)->line = context->current_line;
+                peek_token(context)->token_type = TOKEN_DOUBLE_AND;
+                context->current_position = p + 2;
+                return;
+            } else {
+                peek_token(context)->left = p - context->file_start;
+                peek_token(context)->right = peek_token(context)->left + 1;
+                peek_token(context)->line = context->current_line;
+                peek_token(context)->token_type = TOKEN_AND;
+                context->current_position = p + 1;
+                return; 
+            }
+        }  case '|': {
+            if (p[1] == '|') {
+                peek_token(context)->left = p - context->file_start;
+                peek_token(context)->right = peek_token(context)->left + 2;
+                peek_token(context)->line = context->current_line;
+                peek_token(context)->token_type = TOKEN_DOUBLE_OR;
+                context->current_position = p + 2;
+                return;
+            } else {
+                peek_token(context)->left = p - context->file_start;
+                peek_token(context)->right = peek_token(context)->left + 1;
+                peek_token(context)->line = context->current_line;
+                peek_token(context)->token_type = TOKEN_OR;
+                context->current_position = p + 1;
+                return; 
+            }
         } case '=': {
             if (p[1] == '=') {
                 peek_token(context)->left = p - context->file_start;
@@ -177,6 +229,22 @@ void next_token( struct Context *context ) {
                 peek_token(context)->right = peek_token(context)->left + 1;
                 peek_token(context)->line = context->current_line;
                 peek_token(context)->token_type = TOKEN_EQ;
+                context->current_position = p + 1;
+                return; 
+            }
+        } case '!': {
+            if (p[1] == '=') {
+                peek_token(context)->left = p - context->file_start;
+                peek_token(context)->right = peek_token(context)->left + 2;
+                peek_token(context)->line = context->current_line;
+                peek_token(context)->token_type = TOKEN_NOT_EQ;
+                context->current_position = p + 2;
+                return;
+            } else {
+                peek_token(context)->left = p - context->file_start;
+                peek_token(context)->right = peek_token(context)->left + 1;
+                peek_token(context)->line = context->current_line;
+                peek_token(context)->token_type = TOKEN_BANG;
                 context->current_position = p + 1;
                 return; 
             }
@@ -266,6 +334,28 @@ void next_token( struct Context *context ) {
             context->current_position = p + 4;
             return;
         }
+    } else if (p[0] == 't' && p[1] == 'r' && p[2] == 'u' && p[3] == 'e') {
+        if (p[4] <= WHITE_SPACE || is_valid_identifier_char(p[4]) == 0) {
+            // It is a TOKEN_EACH
+            peek_token(context)->left  = p - context->file_start;
+            peek_token(context)->right = peek_token(context)->left + 4;
+            peek_token(context)->line  = context->current_line;
+
+            peek_token(context)->token_type = TOKEN_TRUE;
+            context->current_position = p + 4;
+            return;
+        }
+    } else if (p[0] == 't' && p[1] == 'y' && p[2] == 'p' && p[3] == 'e') {
+        if (p[4] <= WHITE_SPACE || is_valid_identifier_char(p[4]) == 0) {
+            // It is a TOKEN_EACH
+            peek_token(context)->left  = p - context->file_start;
+            peek_token(context)->right = peek_token(context)->left + 4;
+            peek_token(context)->line  = context->current_line;
+
+            peek_token(context)->token_type = TOKEN_TYPE;
+            context->current_position = p + 4;
+            return;
+        }
     }
 
     // For length 5
@@ -277,6 +367,17 @@ void next_token( struct Context *context ) {
             peek_token(context)->line  = context->current_line;
 
             peek_token(context)->token_type = TOKEN_WHILE;
+            context->current_position = p + 5;
+            return;
+        }
+    } else if (p[0] == 'f' && p[1] == 'a' && p[2] == 'l' && p[3] == 's' && p[4] == 'e') {
+        if (p[5] <= WHITE_SPACE || is_valid_identifier_char(p[5]) == 0) {
+            // It is a TOKEN_WHILE
+            peek_token(context)->left  = p - context->file_start;
+            peek_token(context)->right = peek_token(context)->left + 5;
+            peek_token(context)->line  = context->current_line;
+
+            peek_token(context)->token_type = TOKEN_FALSE;
             context->current_position = p + 5;
             return;
         }

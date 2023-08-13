@@ -313,7 +313,7 @@ struct Node *parse_statement( struct Context *context ) {
 
             next_token(context);
             // Current: TOKEN_COLON
-            
+
             next_token(context);
 
             struct Node *container = parse_symbol(context);
@@ -915,7 +915,7 @@ struct Node *parse_token( struct Context *context ) {
             return symbol;
         } break;
 
-        case TOKEN_SINGLE_AND: {
+        case TOKEN_AND: {
             // Case [6]
             next_token(context);
             struct Node *addressof = get_empty_node();
