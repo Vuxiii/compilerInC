@@ -12,10 +12,30 @@ static unsigned int NODE_BUFFER_INDEX = 0;
 static unsigned int NODE_BUFFER_SIZE = NODE_BUFFER_INITIAL_SIZE;
 struct Node *parse(struct Context *context) {
     next_token(context);
-    while (current_token(context)->token_type != TOKEN_EOP) {
-        return parse_toplevel_statement(context);
+    struct Node *top_level = NULL;
+    while (peek_token(context)->token_type != TOKEN_EOP) {
+        if (top_level == NULL) {
+            top_level = parse_toplevel_statement(context);
+            continue;
+        }
+
+        // Compound toplevel statements
+        struct Node *compound = get_empty_node();
+
+        struct Node *rest = parse_toplevel_statement(context);
+
+        compound->node_type = NODE_COMPOUND_STATEMENT;
+        compound->left  = top_level->left;
+        compound->right = rest->right;
+        compound->line  = top_level->line;
+
+        compound->contents.compound_statement = (struct Compound_Statement) {
+            .left = top_level,
+            .right = rest
+        };
+        top_level = compound;
     }
-    return NULL;
+    return top_level;
 }
 
 struct Node *parse_toplevel_statement( struct Context *context ) {
