@@ -41,7 +41,8 @@ enum TOKEN {
     TOKEN_TRUE       = 35,
     TOKEN_STRUCT     = 36, // Compounded type. Just packing.
     TOKEN_TYPE       = 37, // Enable the user to make their own types. Custom behaviour
-
+    TOKEN_WHILE      = 38,
+    TOKEN_FOR        = 39,
 
     NODE_COMPOUND_STATEMENT,
     NODE_FN_DECLARATION,
@@ -59,6 +60,8 @@ enum TOKEN {
     NODE_BINARY_OPERATION,
     NODE_PARAMETER_LIST,
     NODE_ARGUMENT_LIST,
+    NODE_FOR,
+    NODE_SCOPE,
 };
 
 enum PRIMITIVE_TYPE {
@@ -120,6 +123,13 @@ struct Declaration_Struct {
     struct String *struct_name;
     struct Node *fields;
     long long count; // If not set: -1
+};
+
+struct For_Loop {
+    struct Node *init;      // NULLABLE
+    struct Node *guard;
+    struct Node *advance;   // NULLABLE
+    struct Node *body;
 };
 
 struct Function_Call {
@@ -203,6 +213,8 @@ struct Node {
         struct Expression               address_of;
         struct Expression               deref;
         struct Binary_Operation         binary_operation;
+        struct For_Loop                 for_loop;
+        struct Expression               scope;
     } contents;
     
     unsigned int line;

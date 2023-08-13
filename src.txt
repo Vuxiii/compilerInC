@@ -1,12 +1,15 @@
 fn main() {
-    let Point :: struct {
-        x: int,
-        y: int
-    };
-    a = 2;
+    let sum: int = 0;
+    for ( 
+            let i: int = b; 
+            i < a; 
+            i = i + c;
+        ) {
+            sum = sum + i;
+        }
+    
 }
 
-fn calc( p1: Point, p2: Point ) {
-}
+fn calc( p1: Point, p2: Point ) p1 = p2;
 
 $

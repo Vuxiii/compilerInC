@@ -180,6 +180,38 @@ void next_token( struct Context *context ) {
                 context->current_position = p + 1;
                 return; 
             }
+        } case '<': {
+            if (p[1] == '=') {
+                peek_token(context)->left = p - context->file_start;
+                peek_token(context)->right = peek_token(context)->left + 2;
+                peek_token(context)->line = context->current_line;
+                peek_token(context)->token_type = TOKEN_LESS_EQ;
+                context->current_position = p + 2;
+                return;
+            } else {
+                peek_token(context)->left = p - context->file_start;
+                peek_token(context)->right = peek_token(context)->left + 1;
+                peek_token(context)->line = context->current_line;
+                peek_token(context)->token_type = TOKEN_LESS;
+                context->current_position = p + 1;
+                return; 
+            }
+        } case '>': {
+            if (p[1] == '=') {
+                peek_token(context)->left = p - context->file_start;
+                peek_token(context)->right = peek_token(context)->left + 2;
+                peek_token(context)->line = context->current_line;
+                peek_token(context)->token_type = TOKEN_GREATER_EQ;
+                context->current_position = p + 2;
+                return;
+            } else {
+                peek_token(context)->left = p - context->file_start;
+                peek_token(context)->right = peek_token(context)->left + 1;
+                peek_token(context)->line = context->current_line;
+                peek_token(context)->token_type = TOKEN_GREATER;
+                context->current_position = p + 1;
+                return; 
+            }
         } 
     }
     // For length 2
@@ -200,13 +232,38 @@ void next_token( struct Context *context ) {
     // For length 3
     if (p[0] == 'l' && p[1] == 'e' && p[2] == 't') {
         if (p[3] <= WHITE_SPACE || is_valid_identifier_char(p[3]) == 0) { 
-            // It is an TOKEN_LET
+            // It is a TOKEN_LET
             peek_token(context)->left  = p - context->file_start;
             peek_token(context)->right = peek_token(context)->left + 3;
             peek_token(context)->line  = context->current_line;
 
             peek_token(context)->token_type = TOKEN_LET;
             context->current_position = p + 3;
+            return;
+        }
+    } else if (p[0] == 'f' && p[1] == 'o' && p[2] == 'r') {
+        if (p[3] <= WHITE_SPACE || is_valid_identifier_char(p[3]) == 0) {
+            // It is a TOKEN_FOR
+            peek_token(context)->left  = p - context->file_start;
+            peek_token(context)->right = peek_token(context)->left + 3;
+            peek_token(context)->line  = context->current_line;
+
+            peek_token(context)->token_type = TOKEN_FOR;
+            context->current_position = p + 3;
+            return;
+        }
+    }
+
+    // For length 5
+    if (p[0] == 'w' && p[1] == 'h' && p[2] == 'i' && p[3] == 'l' && p[4] == 'e') {
+        if (p[5] <= WHITE_SPACE || is_valid_identifier_char(p[5]) == 0) {
+            // It is a TOKEN_WHILE
+            peek_token(context)->left  = p - context->file_start;
+            peek_token(context)->right = peek_token(context)->left + 5;
+            peek_token(context)->line  = context->current_line;
+
+            peek_token(context)->token_type = TOKEN_WHILE;
+            context->current_position = p + 5;
             return;
         }
     }
