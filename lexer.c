@@ -100,15 +100,15 @@ void next_token( struct Context *context ) {
  
             peek_token(context)->token_type = TOKEN_COMMA;
             context->current_position = p + 1;            
+            return;
         } case '.': {
-            if (p[1] >= '0' || p[1] <= '9') {
+            if (p[1] >= '0' && p[1] <= '9') {
                 // It is a number.
                 break;
             }
             peek_token(context)->left = p - context->file_start;
             peek_token(context)->right = peek_token(context)->left + 1;
             peek_token(context)->line = context->current_line;
- 
             peek_token(context)->token_type = TOKEN_DOT;
             context->current_position = p + 1;        
             return;    
@@ -119,6 +119,7 @@ void next_token( struct Context *context ) {
  
             peek_token(context)->token_type = TOKEN_PLUS;
             context->current_position = p + 1;            
+            return;
         } case '-': {
             if (p[1] >= '0' || p[1] <= '9') {
                 // It is a number.
@@ -316,6 +317,7 @@ struct String *get_string_from( char *left, char *right) {
 
 int is_valid_identifier_char(char c) {
     if (c == '_') return 1;
+    if (c >= '0' && c <= '9') return 1;
     // Trick to remove the 6th bit
     // We now only have  to compare twice in the range [65, 90]
     c &= 223;

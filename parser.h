@@ -25,6 +25,12 @@ struct Node *parse_mult( struct Context *context );
 
 struct Node *parse_token( struct Context *context );
 
+/**
+ *  symbol := TOKEN_IDENTIFIER
+ *          | TOKEN_IDENTIFIER . symbol
+ *          | TOKEN_IDENTIFIER [ expression ]
+ *          | TOKEN_IDENTIFIER [ expression ] . symbol
+ */
 struct Node *parse_symbol( struct Context *context );
 
 /**

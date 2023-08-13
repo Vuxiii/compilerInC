@@ -45,6 +45,7 @@ enum TOKEN {
 
     NODE_COMPOUND_STATEMENT,
     NODE_FN_DECLARATION,
+    NODE_FN_CALL,
     NODE_SYMBOL,
     NODE_FIELD_ACCESS,
     NODE_ARRAY_ACCESS,
@@ -57,6 +58,7 @@ enum TOKEN {
     NODE_DEREF,
     NODE_BINARY_OPERATION,
     NODE_PARAMETER_LIST,
+    NODE_ARGUMENT_LIST,
 };
 
 enum PRIMITIVE_TYPE {
@@ -97,6 +99,7 @@ struct Token {
 
 struct Declaration_Function {
     struct String *function_name;
+    struct Node *parameter_list; // NULL if no parameters
     struct Node *body;
 };
 
@@ -121,18 +124,21 @@ struct Declaration_Struct {
     long long count; // If not set: -1
 };
 
+struct Function_Call {
+    struct Node *lhs;
+    struct Node *argument_list; // NULL if no parameters
+};
+
 struct Parameter_List {
     struct Node *parameter;
     struct Node *next;
 };
 
 struct Argument_List {
-
+    struct Node *argument;
+    struct Node *next;
 };
 
-struct Argument {
-
-};
 
 struct Assignment {
     struct Node *lhs;
@@ -179,26 +185,26 @@ struct Binary_Operation {
 struct Node {
     enum TOKEN node_type;
     union {
-        struct Declaration_Function function_declaration;
-        struct Declaration_Variable variable_declaration;
-        struct Declaration_Array array_declaration;
-        struct Declaration_Struct struct_declaration;
-        struct Declaration_Type type_declaration;
-        struct Parameter_List parameter_list; 
-        struct Argument_List argument_list;
-        struct Declaration_Variable parameter;
-        struct Argument argument;
-        struct Assignment assignment;
-        struct Compound_Statement compound_statement;
-        struct Symbol symbol;
-        struct Field_Access field_access;
-        struct Array_Access array_access;
-        struct Number_D decimal_number;
-        struct Number_F float_number;
-        struct Symbol string;
-        struct Expression address_of;
-        struct Expression deref;
-        struct Binary_Operation binary_operation;
+        struct Function_Call            function_call;
+        struct Declaration_Function     function_declaration;
+        struct Declaration_Variable     variable_declaration;
+        struct Declaration_Array        array_declaration;
+        struct Declaration_Struct       struct_declaration;
+        struct Declaration_Type         type_declaration;
+        struct Parameter_List           parameter_list; 
+        struct Argument_List            argument_list;
+        struct Declaration_Variable     parameter;
+        struct Assignment               assignment;
+        struct Compound_Statement       compound_statement;
+        struct Symbol                   symbol;
+        struct Field_Access             field_access;
+        struct Array_Access             array_access;
+        struct Number_D                 decimal_number;
+        struct Number_F                 float_number;
+        struct Symbol                   string;
+        struct Expression               address_of;
+        struct Expression               deref;
+        struct Binary_Operation         binary_operation;
     } contents;
     
     unsigned int line;

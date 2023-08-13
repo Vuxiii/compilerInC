@@ -109,10 +109,63 @@ struct Node *parse_statement( struct Context *context ) {
 
             switch (peek_token(context)->token_type) {
                 case TOKEN_EQ: {
+                    next_token(context);
+                    // Current: TOKEN_EQ
+                    struct Node *assignment = get_empty_node();
+                    struct Node *expression = parse_expression(context);
+                    
+                    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_SEMICOLON, .error_string = String( 
+                        .str = "Unexpectec Token at the end of an assignment. Expected ';'\n",
+                        .length = 59 ));
+                    next_token(context);
+                    // Current: TOKEN_SEMICOLON
 
+                    assignment->left = some_statement->left;
+                    assignment->right = expression->right;
+                    assignment->line = some_statement->line;
+                    assignment->node_type = NODE_ASSIGNMENT;
+                    
+                    assignment->contents.assignment = (struct Assignment) {
+                        .lhs = some_statement,
+                        .rhs = expression
+                    };
+
+                    some_statement = assignment;
                 } break;
-                case TOKEN_SEMICOLON: {
+                case TOKEN_LPAREN: {
+                    // Must be a funciton call?
+                    next_token(context);
+                    
+                    struct Node *function_call = get_empty_node();
 
+                    struct Node *arguments = parse_argument_list(context);
+
+                    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_RPAREN, .error_string = String(
+                        .str = "Unexpected Token while parsing a function call. Expected ')'\n",
+                        .length = 61));
+                    
+                    next_token(context);
+                    // Current: TOKEN_RPAREN
+
+                    // TODO: Future Proof
+                    // At this point it might actually return a reference to another object. So we could also see a TOKEN_DOT here
+
+                    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_SEMICOLON, .error_string = String(
+                        .str = "Unexpected Token while parsing a function call. Expected ';'\n",
+                        .length = 61));
+                    next_token(context);
+                    // Current: TOKEN_SEMICOLON
+
+                    function_call->left = some_statement->left;
+                    function_call->right = current_token(context)->right;
+                    function_call->line = some_statement->line;
+                    function_call->node_type = NODE_FN_CALL;
+
+                    function_call->contents.function_call = (struct Function_Call) {
+                        .lhs = some_statement,
+                        .argument_list = arguments // NULL IF ZERO ARGS
+                    };
+                    some_statement = function_call;
                 } break;
                 default: {
                     emit_error(context, .token = peek_token(context), .error_string = String(
@@ -128,10 +181,11 @@ struct Node *parse_statement( struct Context *context ) {
     }
     struct Node *rhs_statement = parse_statement(context); // Check if there is another statement
     if (!rhs_statement) {
+        // Just a single statement
         return some_statement;
     }
 
-    // We have to make a compound statement
+    // Compound statement
     struct Node *compound_statement = get_empty_node();
     compound_statement->node_type = NODE_COMPOUND_STATEMENT;
     compound_statement->left  = some_statement->left;
@@ -145,8 +199,12 @@ struct Node *parse_statement( struct Context *context ) {
 struct Node *parse_symbol( struct Context *context ) {
     // [1] IDENTIFIER
     // [2] IDENTIFIER . parse_symbol
-    // [3] IDENTIFIER [ EXPRESSION ]
-    // [4] IDENTIFIER [ EXPRESSION ] . parse_symbol
+    // [3] IDENTIFIER [ expression ]
+    // [4] IDENTIFIER [ expression ] . parse_symbol
+    
+    assert_token_type(context, .which = CURRENT, .expected_token = TOKEN_IDENTIFIER, .error_string = String(
+        .str = "Unexpected Token while trying to parse a symbol expression. Expected an identifier\n",
+        .length = 83 ));
 
     // Current: IDENTIFIER
     struct String *lhs_identifier = current_token(context)->data.str;
@@ -196,6 +254,10 @@ struct Node *parse_symbol( struct Context *context ) {
             array_access->node_type = NODE_ARRAY_ACCESS;
             return array_access;
         } else {
+            next_token(context);
+            // Current: TOKEN_DOT
+            next_token(context);
+
             struct Node *field_access = get_empty_node();
             struct Node *rhs = parse_symbol(context);
             field_access->contents.field_access = (struct Field_Access) {
@@ -210,8 +272,8 @@ struct Node *parse_symbol( struct Context *context ) {
     }
 
     emit_error(context, .token = peek_token(context), .error_string = String(
-                .str = "Unexpected Token in declaration. Expected one of [ '.' , '[' ]\n",
-                .length = 63));
+                .str = "Unexpected Token. Expected one of [ '.' , '[' ]\n",
+                .length = 48));
 
     // We never reach here.
     return NULL;
@@ -453,6 +515,38 @@ struct Node *parse_parameter_list( struct Context *context ) {
     return NULL;
 };
 
+struct Node *parse_argument_list( struct Context *context ) {
+    // expression
+    // expression TOKEN_COMMA argument_list
+
+    if (peek_token(context)->token_type == TOKEN_RPAREN) {
+        return NULL; // TODO: Is this the correct place to put this. Maybe hoist it to the caller, to make this function more generic. 
+    }
+
+    struct Node *argument = parse_expression(context);
+    if (peek_token(context)->token_type == TOKEN_COMMA) {
+        next_token(context);
+        // Current: TOKEN_COMMA
+
+        struct Node *argument_list = get_empty_node();
+        struct Node *argument_rest = parse_argument_list(context);
+
+        argument_list->left = argument->left;
+        argument_list->line = argument->line;
+        argument_list->right = argument_rest->right;
+
+        argument_list->contents.argument_list = (struct Argument_List) {
+            .argument = argument,
+            .next = argument_rest
+        };
+
+        argument_list->node_type = NODE_ARGUMENT_LIST;
+        argument = argument_list;
+    }
+
+    return argument;
+}
+
 struct Node *parse_parameter( struct Context *context ) {
     // IDENTIFIER : IDENTIFIER 
     
@@ -675,7 +769,31 @@ struct Node *parse_token( struct Context *context ) {
         case TOKEN_IDENTIFIER: {
             // Case [5]
             next_token(context);
-            return parse_symbol( context );
+            struct Node *symbol = parse_symbol( context );
+            if (peek_token(context)->token_type == TOKEN_LPAREN) {
+                // function call
+                struct Node *function_call = get_empty_node();
+                next_token(context);
+                struct Node *arguments = parse_argument_list(context);
+
+                assert_token_type(context, .which = PEEK, .expected_token = TOKEN_RPAREN, .error_string = String(
+                    .str = "Unexpected Token while trying to parse a function call. Expected ')'\n",
+                    .length = 69 ));
+                next_token(context);
+
+                function_call->contents.function_call = (struct Function_Call) {
+                    .lhs = symbol,
+                    .argument_list = arguments // NULL IF ZERO ARGUMENTS
+                };
+
+                function_call->left = symbol->left;
+                function_call->line = symbol->line;
+                function_call->right = current_token(context)->right;
+
+                function_call->node_type = NODE_FN_CALL;
+                symbol = function_call;
+            }
+            return symbol;
         } break;
 
         case TOKEN_SINGLE_AND: {
