@@ -1,5 +1,6 @@
 #include "lexer.h"
 #include "parser.h"
+#include "interpreter.h"
 #include "error.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,9 +9,14 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
+#define STACK_SIZE 4*1024*1024
+#define HEAP_SIZE 8*1024*1024
+
 struct Node *NODE_BUFFER;
 
 int main( int argc, char **argv ) {
+    
+
     char *filename;
     if (argc == 1) {
         filename = "src.txt";
@@ -44,8 +50,17 @@ int main( int argc, char **argv ) {
     };
     // print_tokens(&context);
 
-    parse(&context);
+    struct Node *root = parse(&context);
     
+    struct Runtime runtime = (struct Runtime) {
+        .stack_size = STACK_SIZE,
+        .heap_size  = HEAP_SIZE,
+        .stack = malloc(sizeof(char) * STACK_SIZE),
+        .heap  = malloc(sizeof(char) * HEAP_SIZE),
+    };
+
+    interpret(&runtime, root);
+
     return 0;
 }
 

@@ -1,10 +1,4 @@
 fn main() {
-    let a: string;
-    a = "Hello World";
-    let list: [10] int;
-    each (e : list)
+    let a: int = 4 + 2;
 }
-
-fn calc( p1: Point, p2: Point ) p1 = p2;
-
 $
