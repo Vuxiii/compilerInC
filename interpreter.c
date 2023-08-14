@@ -57,7 +57,7 @@ void interpret_statement( struct Runtime *runtime, struct Node *some_statement )
         case NODE_VARIABLE_DECLARATION: {
             struct Declaration_Variable this = some_statement->contents.variable_declaration;
             PUSHQ(runtime, 1);
-            
+            POPQ(runtime, RBX(runtime));            
         } break;
         case NODE_ASSIGNMENT: {
             struct Assignment this = some_statement->contents.assignment;

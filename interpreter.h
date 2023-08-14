@@ -117,8 +117,18 @@ struct Runtime {
 #define R15W(runtime) (*   (short *)&((runtime->registers)[15]))
 #define R15B(runtime) (*   (char  *)&((runtime->registers)[15]))
 
-#define PUSHQ(runtime, value) *(long *)((runtime)->stack + RSP((runtime))) = value;\
-                                                RSP((runtime))++
+#define PUSHQ(runtime, value) *(long *)((runtime)->stack + (++RSP(runtime))) = value;
+#define POPQ(runtime, register) (register) = *(long *)((runtime)->stack + (RSP((runtime))))
+#define MOVE(from, to) (to) = (from)
+#define ADD(from, to) (to) = (to) + (from)
+#define SUB(from, to) (to) = (to) - (from)
+#define MUL(runtime, reg) RAX(runtime) = RAX(runtime) * (reg);\
+                          RDX(runtime) = RAX(runtime) % (reg)
+#define XOR(from, to) (to) = (to) ^ (from)
+#define OR(from, to) (to) = (to) | (from)
+#define AND(from, to) (to) = (to) & (from)
+ 
+#define LEA(from, to) (to) = &(from)
 
 void interpret( struct Runtime *runtime, struct Node *node );
 
