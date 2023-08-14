@@ -119,6 +119,12 @@ struct Runtime {
 
 #define PUSHQ(runtime, value) *(long *)((runtime)->stack + (++RSP(runtime))) = value;
 #define POPQ(runtime, register) (register) = *(long *)((runtime)->stack + (RSP((runtime))))
+#define ENTER(runtime, offset) PUSHQ((runtime), RBP(runtime));\
+                               ADD(offset, RSP(runtime));\
+                               MOVE(RSP(runtime), RBP(runtime))
+#define LEAVE(runtime) MOVE(RBP(runtime), RSP(runtime))
+// #define RET(runtime) 
+// #define CALL(runtime, function)
 #define MOVE(from, to) (to) = (from)
 #define ADD(from, to) (to) = (to) + (from)
 #define SUB(from, to) (to) = (to) - (from)
@@ -129,6 +135,7 @@ struct Runtime {
 #define AND(from, to) (to) = (to) & (from)
  
 #define LEA(from, to) (to) = &(from)
+#define OFFSET(value, reg, type) *(type *)((char *)&(reg) + value)
 
 void interpret( struct Runtime *runtime, struct Node *node );
 
