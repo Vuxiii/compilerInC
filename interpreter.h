@@ -135,7 +135,7 @@ struct Runtime {
 #define AND(from, to) (to) = (to) & (from)
  
 #define LEA(from, to) (to) = &(from)
-#define OFFSET(value, reg, type) *(type *)((char *)&(reg) + value)
+#define OFFSET(value, reg, type) *(type *)(((char *)&(reg)) + value)
 
 void interpret( struct Runtime *runtime, struct Node *node );
 
