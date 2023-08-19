@@ -4,7 +4,7 @@ void print_string( struct String *str ) {
     write(STDOUT_FILENO, str->str, str->length);  
 }
 void print_int( int num ) {
-    char s[10] = {'0','0', '0', '0', '0', '0', '0', '0', '0', '0'};
+    char s[10] = {'0'};
     int len = 0;
     while (num != 0) {
         char c = num % 10;

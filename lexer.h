@@ -4,7 +4,6 @@
 #include "string.h"
 #include "token.h"
 
-
 #define WHITE_SPACE 32
 
 
@@ -18,6 +17,9 @@ struct Context {
     char peek_token_index;
     unsigned int current_line;
     
+    struct ASM_Instruction *ASM_INSTRUCTION_BUFFER;
+    unsigned int instruction_index;
+    unsigned int instruction_size;
 };
 
 /**

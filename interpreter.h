@@ -1,14 +1,15 @@
 #ifndef INTERPRETER_H
 #define INTERPRETER_H
 #include "token.h"
+#include <stdint.h>
 
 struct Runtime {
     void *heap;
-    long  heap_size;
+    int64_t heap_size;
     void *heap_ptr;
 
     void *stack;
-    long  stack_size;
+    int64_t  stack_size;
     
     
     /*
@@ -29,7 +30,7 @@ struct Runtime {
         [e] = r14
         [f] = r15
     */
-    long registers[16];
+    int64_t registers[16];
 };
 
 // MACROS FOR ACCESSING REGISTERS
@@ -137,7 +138,7 @@ struct Runtime {
 #define LEA(from, to) (to) = &(from)
 #define OFFSET(value, reg, type) *(type *)(((char *)&(reg)) + value)
 
-void interpret( struct Runtime *runtime, struct Node *node );
+void interpret( struct Runtime *runtime, struct Context *context );
 
 void interpret_statement( struct Runtime *runtime, struct Node *some_statement );
 

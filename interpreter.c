@@ -1,11 +1,10 @@
 #include "interpreter.h"
 #include "error.h"
 #include "string.h"
-#include "token.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-void interpret( struct Runtime *runtime, struct Node *node ) {
+void interpret( struct Runtime *runtime, struct Context *context ) {
     
     switch (node->node_type) {
 

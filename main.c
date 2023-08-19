@@ -2,6 +2,7 @@
 #include "parser.h"
 #include "interpreter.h"
 #include "error.h"
+#include "codegen.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,8 +15,7 @@
 
 struct Node *NODE_BUFFER;
 
-int main( int argc, char **argv ) {
-    
+int main( int argc, char **argv ) { 
 
     char *filename;
     if (argc == 1) {
@@ -46,7 +46,10 @@ int main( int argc, char **argv ) {
         .current_line = 1,
         .current_position = input,
         .file_start = input,
-        .filename = String( .str = filename, .length = strlen(filename) )
+        .filename = String( .str = filename, .length = strlen(filename) ),
+        .instruction_index = 0,
+        .instruction_size = sizeof(struct ASM_Instruction) * 1024,
+        .ASM_INSTRUCTION_BUFFER = malloc(sizeof(struct ASM_Instruction) * 1024)
     };
     // print_tokens(&context);
 
@@ -59,6 +62,8 @@ int main( int argc, char **argv ) {
         .heap  = malloc(sizeof(char) * HEAP_SIZE),
     };
 
+    convert_to_ir(&context, root);
+    
     interpret(&runtime, root);
 
     return 0;
