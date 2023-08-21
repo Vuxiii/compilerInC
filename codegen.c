@@ -58,7 +58,7 @@ void gen_expression( struct Context *context, struct Node *expr ) {
         case TOKEN_NUMBER_D: {
             struct ASM_Instruction *instr = get_empty_asm_instruction( context );
             instr->instr = INSTR_PUSH;
-            instr->mode = IMMEDIATE;
+            instr->from_mode = IMMEDIATE;
             instr->data = expr->contents.decimal_number.inum;
         } break;
         default: {

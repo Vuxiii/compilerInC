@@ -21,32 +21,32 @@ enum INSTRUCTION {
 };
 
 enum REGISTER {
-    REG_RAX,
-    REG_RBX,
-    REG_RCX,
-    REG_RDX,
-    REG_RSI,
-    REG_RDI,
-    REG_RBP,
-    REG_RSP,
-    REG_R8,
-    REG_R9,
-    REG_R10,
-    REG_R11,
-    REG_R12,
-    REG_R13,
-    REG_R14,
-    REG_R15
+    REG_RAX = 0,
+    REG_RBX = 1,
+    REG_RCX = 2,
+    REG_RDX = 3,
+    REG_RSI = 4,
+    REG_RDI = 5,
+    REG_RBP = 6,
+    REG_RSP = 7,
+    REG_R8  = 8,
+    REG_R9  = 9,
+    REG_R10 = 10,
+    REG_R11 = 11,
+    REG_R12 = 12,
+    REG_R13 = 13,
+    REG_R14 = 14,
+    REG_R15 = 15
 };
 
-enum REG_SIZE {
-    BYTES_8,
-    BYTES_4,
-    BYTES_2,
-    BYTES_1,
+enum SIZE {
+    BYTES_8 = 8,
+    BYTES_4 = 4,
+    BYTES_2 = 2,
+    BYTES_1 = 1,
 };
 
-enum INSTRUCTION_MODE {
+enum REGISTER_MODE {
     IMMEDIATE,
     RELATIVE_OFFSET,
     DIRECT_OFFSET,
@@ -55,12 +55,17 @@ enum INSTRUCTION_MODE {
 
 struct ASM_Instruction {
     enum INSTRUCTION      instr;
-    enum INSTRUCTION_MODE mode;
+    enum SIZE             instr_size;
+
     enum REGISTER         from_reg;
-    enum REG_SIZE         from_size;
+    enum REGISTER_MODE    from_mode;
+
     enum REGISTER         to_reg;
-    enum REG_SIZE         to_size;
+    enum REGISTER_MODE    to_mode;
+
     int64_t               data;
+    int64_t               offset;
+    enum SIZE             offset_size;
 };
 
 

@@ -3,6 +3,7 @@
 #include "interpreter.h"
 #include "codegen.h"
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -55,18 +56,18 @@ int main( int argc, char **argv ) {
 
     struct Node *root = parse(&context);
     
-    // struct Runtime runtime = (struct Runtime) {
-    //     .stack_size = STACK_SIZE,
-    //     .heap_size  = HEAP_SIZE,
-    //     .stack = malloc(sizeof(char) * STACK_SIZE),
-    //     .heap  = malloc(sizeof(char) * HEAP_SIZE),
-    // };
+    struct Runtime runtime = (struct Runtime) {
+        .stack_size = STACK_SIZE / sizeof(int64_t),
+        .heap_size  = HEAP_SIZE / sizeof(int64_t),
+        .stack = malloc(sizeof(int64_t) * STACK_SIZE),
+        .heap  = malloc(sizeof(int64_t) * HEAP_SIZE),
+    };
+
+    RSP(&runtime) = (STACK_SIZE) / sizeof(int64_t) - 1;
 
     convert_to_ir(&context, root);
     
-    // interpret(&runtime, &context);
+    interpret(&runtime, &context);
 
     return 0;
 }
-
-
