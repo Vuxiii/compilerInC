@@ -1,8 +1,6 @@
-#ifndef STRING_H
-#define STRING_H
-
+#pragma once
 struct String {
-    unsigned int length;
+    unsigned long length;
     char *str;
 };
 
@@ -10,4 +8,3 @@ struct String {
 
 void print_string( struct String *str );
 void print_int( int num );
-#endif

@@ -1,6 +1,6 @@
-#ifndef SSA_H
-#define SSA_H
-#import "string.h"
+#pragma once
+
+#include "string.h"
 
 struct SSA_Statement {
     struct String *var;
@@ -49,6 +49,3 @@ void process_scc( void *scc );
 void append_operand( struct SSA_Variable *phi, struct SSA_Variable *variable );
 
 void replace_phi_with( struct SSA_Variable *phi, struct SSA_Variable *variable );
-
-
-#endif

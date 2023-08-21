@@ -1,26 +1,13 @@
-#ifndef LEXER_H
-#define LEXER_H
-#define TOKEN_QUEUE_SIZE 2
+#pragma once
+
 #include "string.h"
 #include "token.h"
+#include "codegen.h"
+#include "context.h"
 
 #define WHITE_SPACE 32
 
 
-struct Context {
-    struct Token TOKEN_QUEUE[TOKEN_QUEUE_SIZE];
-    char *STRING_STORE[2048];
-    struct String *filename;
-    char *file_start;
-    char *current_position;
-    char current_token_index;
-    char peek_token_index;
-    unsigned int current_line;
-    
-    struct ASM_Instruction *ASM_INSTRUCTION_BUFFER;
-    unsigned int instruction_index;
-    unsigned int instruction_size;
-};
 
 /**
  *  This funciton retrieves the next token,
@@ -34,7 +21,7 @@ void next_token( struct Context *context );
  *  This function returns a string as represented
  *  by [left, right[
  */
-struct String *get_string_from( char *left, char *right);
+struct String *get_string_from( char *left, char *right );
 
 /**
  * Return the current Token
@@ -47,5 +34,3 @@ struct Token *peek_token( struct Context *context );
 void print_tokens( struct Context *context );
 
 int is_valid_identifier_char(char c);
-
-#endif

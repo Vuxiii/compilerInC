@@ -1,49 +1,53 @@
 #include "interpreter.h"
-#include "error.h"
-#include "string.h"
+#include "context.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
 void interpret( struct Runtime *runtime, struct Context *context ) {
-    
-    switch (node->node_type) {
+    // struct ASM_Instruction *a = context->ASM_INSTRUCTION_BUFFER;
+    (void)runtime;
+    (void)context;
+    // a->data = 2;:w
 
-    case TOKEN_EOP: {
-        return;
-    } break;
-    case NODE_COMPOUND_STATEMENT: {
+    // switch (node->node_type) {
+
+    // case TOKEN_EOP: {
+    //     return;
+    // } break;
+    // case NODE_COMPOUND_STATEMENT: {
         
-    } break;
-    case NODE_FN_DECLARATION: {
-        struct Declaration_Function fn = node->contents.function_declaration;
-        if (fn.body) {
-            interpret_statement(runtime, fn.body); 
-        }
-    } break;
-    case NODE_FN_CALL:
-    case NODE_SYMBOL:
-    case NODE_FIELD_ACCESS:
-    case NODE_ARRAY_ACCESS:
-    case NODE_VARIABLE_DECLARATION:
-    case NODE_ARRAY_DECLARATION:
-    case NODE_TYPE_DECLARATION:
-    case NODE_STRUCT_DECLARATION:
-    case NODE_ASSIGNMENT:
-    case NODE_ADDRESS_OF:
-    case NODE_DEREF:
-    case NODE_BINARY_OPERATION:
-    case NODE_PARAMETER_LIST:
-    case NODE_ARGUMENT_LIST:
-    case NODE_FOR:
-    case NODE_EACH:
-    case NODE_SCOPE:
+    // } break;
+    // case NODE_FN_DECLARATION: {
+    //     struct Declaration_Function fn = node->contents.function_declaration;
+    //     if (fn.body) {
+    //         interpret_statement(runtime, fn.body); 
+    //     }
+    // } break;
+    // case NODE_FN_CALL:
+    // case NODE_SYMBOL:
+    // case NODE_FIELD_ACCESS:
+    // case NODE_ARRAY_ACCESS:
+    // case NODE_VARIABLE_DECLARATION:
+    // case NODE_ARRAY_DECLARATION:
+    // case NODE_TYPE_DECLARATION:
+    // case NODE_STRUCT_DECLARATION:
+    // case NODE_ASSIGNMENT:
+    // case NODE_ADDRESS_OF:
+    // case NODE_DEREF:
+    // case NODE_BINARY_OPERATION:
+    // case NODE_PARAMETER_LIST:
+    // case NODE_ARGUMENT_LIST:
+    // case NODE_FOR:
+    // case NODE_EACH:
+    // case NODE_SCOPE:
     
-    default: {
-        print_string( String( .str = "Top Level Interpreter Unhandled case.\n", .length = 38));
-        printf("%d\n", node->node_type);
-        exit(EXIT_FAILURE);
-    } break;
-    }
+    // default: {
+    //     print_string( String( .str = "Top Level Interpreter Unhandled case.\n", .length = 38));
+    //     printf("%d\n", node->node_type);
+    //     exit(EXIT_FAILURE);
+    // } break;
+    // }
 }
 
 void interpret_statement( struct Runtime *runtime, struct Node *some_statement ) {
@@ -54,7 +58,7 @@ void interpret_statement( struct Runtime *runtime, struct Node *some_statement )
             interpret_statement( runtime, this.right);
         } break;
         case NODE_VARIABLE_DECLARATION: {
-            struct Declaration_Variable this = some_statement->contents.variable_declaration;
+            // struct Declaration_Variable this = some_statement->contents.variable_declaration;
             PUSHQ(runtime, 1);
             POPQ(runtime, RBX(runtime));            
         } break;

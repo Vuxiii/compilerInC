@@ -1,5 +1,5 @@
-#ifndef PARSER_H
-#define PARSER_H
+#pragma once
+
 #include "lexer.h"
 
 #define NODE_BUFFER_INITIAL_SIZE 2048
@@ -40,5 +40,4 @@ struct Node *parse_parameter( struct Context *context );
 
 struct Node *parse_argument_list( struct Context *context );
 
-struct Node *get_empty_node();
-#endif
+struct Node *get_empty_node(void);

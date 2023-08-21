@@ -1,14 +1,13 @@
-#ifndef INTERPRETER_H
-#define INTERPRETER_H
+#pragma once
 #include "token.h"
+#include "lexer.h"
 #include <stdint.h>
-
 struct Runtime {
-    void *heap;
+    int64_t *heap;
     int64_t heap_size;
-    void *heap_ptr;
+    int64_t *heap_ptr;
 
-    void *stack;
+    int64_t *stack;
     int64_t  stack_size;
     
     
@@ -32,6 +31,11 @@ struct Runtime {
     */
     int64_t registers[16];
 };
+
+void interpret( struct Runtime *runtime, struct Context *context );
+
+void interpret_statement( struct Runtime *runtime, struct Node *some_statement );
+
 
 // MACROS FOR ACCESSING REGISTERS
 #define RAX(runtime)                   (runtime->registers)[0]
@@ -137,9 +141,3 @@ struct Runtime {
  
 #define LEA(from, to) (to) = &(from)
 #define OFFSET(value, reg, type) *(type *)(((char *)&(reg)) + value)
-
-void interpret( struct Runtime *runtime, struct Context *context );
-
-void interpret_statement( struct Runtime *runtime, struct Node *some_statement );
-
-#endif

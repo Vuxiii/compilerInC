@@ -1,5 +1,5 @@
-#ifndef TOKEN_H
-#define TOKEN_H
+#pragma once
+
 #include "string.h"
 enum TOKEN {
     TOKEN_EOP        = -1,
@@ -92,9 +92,9 @@ struct Token {
         struct Node  *node; // 64 bit
     } data;
 
-    unsigned int line;
-    unsigned int left;
-    unsigned int right;
+    unsigned long line;
+    unsigned long left;
+    unsigned long right;
 };
 
 struct Declaration_Function {
@@ -118,7 +118,7 @@ struct Declaration_Array {
 };
 
 struct Declaration_Type {
-
+    int a;
 };
 
 struct Declaration_Struct {
@@ -230,5 +230,3 @@ struct Node {
     unsigned int right;
 
 };
-
-#endif

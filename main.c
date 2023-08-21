@@ -1,8 +1,8 @@
-#include "lexer.h"
 #include "parser.h"
+#include "context.h"
 #include "interpreter.h"
-#include "error.h"
 #include "codegen.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,9 +33,9 @@ int main( int argc, char **argv ) {
         exit(EXIT_FAILURE);
     }
 
-    char *input = malloc( sizeof(char) * sb.st_size );
+    char *input = malloc( sizeof(char) * (size_t)sb.st_size );
 
-    if (read(fd, input, sb.st_size) == -1) {
+    if (read(fd, input, (size_t)sb.st_size) == -1) {
         perror("Reading source file");
         exit(EXIT_FAILURE);
     }
@@ -55,16 +55,16 @@ int main( int argc, char **argv ) {
 
     struct Node *root = parse(&context);
     
-    struct Runtime runtime = (struct Runtime) {
-        .stack_size = STACK_SIZE,
-        .heap_size  = HEAP_SIZE,
-        .stack = malloc(sizeof(char) * STACK_SIZE),
-        .heap  = malloc(sizeof(char) * HEAP_SIZE),
-    };
+    // struct Runtime runtime = (struct Runtime) {
+    //     .stack_size = STACK_SIZE,
+    //     .heap_size  = HEAP_SIZE,
+    //     .stack = malloc(sizeof(char) * STACK_SIZE),
+    //     .heap  = malloc(sizeof(char) * HEAP_SIZE),
+    // };
 
     convert_to_ir(&context, root);
     
-    interpret(&runtime, root);
+    // interpret(&runtime, &context);
 
     return 0;
 }

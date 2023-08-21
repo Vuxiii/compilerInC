@@ -1,5 +1,5 @@
-#ifndef ERROR_H
-#define ERROR_H
+#pragma once
+
 #include "lexer.h"
 #include "string.h"
 
@@ -27,5 +27,3 @@ void assert_token_type_( struct Context *context, struct Assert_Token_Type error
 #define emit_error(context, ...) emit_error_((context), (struct Error_Params){__VA_ARGS__})
 
 #define assert_token_type(context, ...) assert_token_type_((context), (struct Assert_Token_Type){__VA_ARGS__}) 
-
-#endif

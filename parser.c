@@ -639,7 +639,7 @@ struct Node *parse_parameter_list( struct Context *context ) {
     }
 
     return NULL;
-};
+}
 
 struct Node *parse_argument_list( struct Context *context ) {
     // expression
@@ -730,6 +730,11 @@ struct Node *parse_expression( struct Context *context ) {
         binary_operation->right = rhs->right;
         binary_operation->line = lhs->line;
         binary_operation->node_type = NODE_BINARY_OPERATION;
+        binary_operation->contents.binary_operation = (struct Binary_Operation) {
+            .left = lhs,
+            .right = rhs,
+            .op = operator
+        };
         lhs = binary_operation;
     }
 
@@ -764,6 +769,11 @@ struct Node *parse_comparison_expression( struct Context *context ) {
         binary_operation->right = rhs->right;
         binary_operation->line = lhs->line;
         binary_operation->node_type = NODE_BINARY_OPERATION;
+        binary_operation->contents.binary_operation = (struct Binary_Operation) {
+            .left = lhs,
+            .right = rhs,
+            .op = operator
+        };
         lhs = binary_operation;
     }
 
@@ -789,6 +799,11 @@ struct Node *parse_sum( struct Context *context ) {
         binary_operation->right = rhs->right;
         binary_operation->line = lhs->line;
         binary_operation->node_type = NODE_BINARY_OPERATION;
+        binary_operation->contents.binary_operation = (struct Binary_Operation) {
+            .left = lhs,
+            .right = rhs,
+            .op = operator
+        };
         lhs = binary_operation;
     }
 
@@ -813,6 +828,11 @@ struct Node *parse_mult( struct Context *context ) {
         binary_operation->right = rhs->right;
         binary_operation->line = lhs->line;
         binary_operation->node_type = NODE_BINARY_OPERATION;
+        binary_operation->contents.binary_operation = (struct Binary_Operation) {
+            .left = lhs,
+            .right = rhs,
+            .op = operator
+        };
         lhs = binary_operation;
     }
 
@@ -987,7 +1007,7 @@ struct Node *parse_token( struct Context *context ) {
     return NULL;
 }
 
-struct Node *get_empty_node() {
+struct Node *get_empty_node(void) {
     if (NODE_BUFFER_INDEX == NODE_BUFFER_SIZE) {
         // For now just realloc....
 

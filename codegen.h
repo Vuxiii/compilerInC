@@ -1,8 +1,9 @@
-#ifndef CODEGEN_H
-#define CODEGEN_H
+#pragma once
 #include "lexer.h"
 #include "token.h"
+#include "context.h"
 #include <stdint.h>
+
 enum INSTRUCTION {
     INSTR_MOVE,
     INSTR_ADD,
@@ -74,5 +75,3 @@ void gen_statement( struct Context *context, struct Node *statement );
 void gen_expression( struct Context *context, struct Node *expr );
 
 void append_asm_statement( struct Context *context, struct ASM_Instruction *instruction );
-
-#endif

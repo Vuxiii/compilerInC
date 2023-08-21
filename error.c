@@ -8,9 +8,9 @@ void emit_error_( struct Context *context, struct Error_Params error ) {
     print_string(context->filename);
     print_string(String(.str = ":", .length = 1));
     if (error.token)
-        print_int(error.token->line);
+        print_int((int)error.token->line);
     else if (error.node)
-        print_int(error.node->line);
+        print_int((int)error.node->line);
         
     print_string(String(.str = ": error: ", .length = 9));
     if (error.error_string)
