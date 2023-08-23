@@ -68,6 +68,8 @@ struct ASM_Instruction {
     enum SIZE             offset_size;
 };
 
+#define APPEND_ASM_STATEMENT(context, ...) ((context)->ASM_INSTRUCTION_BUFFER[(context)->instruction_index++]) = (struct ASM_Instruction) {__VA_ARGS__}
+
 
 void convert_to_ir( struct Context *context, struct Node *AST );
 
@@ -78,5 +80,3 @@ struct ASM_Instruction *get_empty_asm_instruction( struct Context *context );
 void gen_statement( struct Context *context, struct Node *statement );
 
 void gen_expression( struct Context *context, struct Node *expr );
-
-void append_asm_statement( struct Context *context, struct ASM_Instruction *instruction );

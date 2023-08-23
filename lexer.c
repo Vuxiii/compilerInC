@@ -8,6 +8,7 @@
 void next_token( struct Context *context ) {
     context->current_token_index = context->peek_token_index;
     context->peek_token_index = (context->peek_token_index + 1) % TOKEN_QUEUE_SIZE;
+    
     // Delete spaces
     while ( *context->current_position <= WHITE_SPACE ) {
         if (*context->current_position == '\n')

@@ -56,11 +56,67 @@ void gen_statement( struct Context *context, struct Node *statement ) {
 void gen_expression( struct Context *context, struct Node *expr ) {
     switch (expr->node_type) {
         case TOKEN_NUMBER_D: {
-            struct ASM_Instruction *instr = get_empty_asm_instruction( context );
-            instr->instr = INSTR_PUSH;
-            instr->from_mode = IMMEDIATE;
-            instr->data = expr->contents.decimal_number.inum;
+            APPEND_ASM_STATEMENT(context, 
+                                 .instr = INSTR_PUSH,
+                                 .instr_size = BYTES_8,
+                                 .from_mode = IMMEDIATE,
+                                 .data = expr->contents.decimal_number.inum
+                                 );
+
         } break;
+        case NODE_BINARY_OPERATION: {
+            gen_expression( context, expr->contents.binary_operation.left );
+            gen_expression( context, expr->contents.binary_operation.right );
+
+            
+            APPEND_ASM_STATEMENT(context, 
+                                 .instr = INSTR_POP,
+                                 .instr_size = BYTES_8,
+                                 .from_reg = REG_RAX,
+                                 .from_mode = REGISTER);
+            APPEND_ASM_STATEMENT(context, 
+                                 .instr = INSTR_POP,
+                                 .instr_size = BYTES_8,
+                                 .from_reg = REG_RBX,
+                                 .from_mode = REGISTER);
+            switch (expr->contents.binary_operation.op) {
+                case TOKEN_PLUS: {
+                    APPEND_ASM_STATEMENT(context, 
+                                 .instr = INSTR_ADD,
+                                 .instr_size = BYTES_8,
+                                 .from_reg = REG_RBX,
+                                 .from_mode = REGISTER,
+                                 .to_reg = REG_RAX,
+                                 .to_mode = REGISTER);
+                    APPEND_ASM_STATEMENT(context, 
+                                 .instr = INSTR_PUSH,
+                                 .instr_size = BYTES_8,
+                                 .from_reg = REG_RAX,
+                                 .from_mode = REGISTER);
+                } break;
+                case TOKEN_MINUS: {
+                    APPEND_ASM_STATEMENT(context, 
+                                 .instr = INSTR_SUB,
+                                 .instr_size = BYTES_8,
+                                 .from_reg = REG_RBX,
+                                 .from_mode = REGISTER,
+                                 .to_reg = REG_RAX,
+                                 .to_mode = REGISTER);
+                    APPEND_ASM_STATEMENT(context, 
+                                 .instr = INSTR_PUSH,
+                                 .instr_size = BYTES_8,
+                                 .from_reg = REG_RAX,
+                                 .from_mode = REGISTER);
+                } break;
+                case TOKEN_TIMES: {
+                } break;
+                case TOKEN_DIV: {
+                } break;
+                default: {
+                    // Insert error here
+                } break;
+            }
+                    } break;
         default: {
 
         } break;

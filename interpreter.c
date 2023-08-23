@@ -7,108 +7,108 @@
 #include <stdlib.h>
 
 void interpret( struct Runtime *runtime, struct Context *context ) {
-    struct ASM_Instruction *instruction = context->ASM_INSTRUCTION_BUFFER;
-    
-    switch (instruction->instr) {
-    case INSTR_MOVE: {
-        print_string(String( .str = "Interpreter: MOVE\n", .length = 18));
+    for (unsigned int i = 0; i < context->instruction_index; ++i) {
+        struct ASM_Instruction *instruction = &context->ASM_INSTRUCTION_BUFFER[i];
+        switch (instruction->instr) {
+            case INSTR_MOVE: {
+                print_string(String( .str = "Interpreter: MOVE\n", .length = 18));
+                switch (instruction->from_mode) {
+                    case IMMEDIATE: {
+                        switch (instruction->to_mode) {
+                            case IMMEDIATE:{
+                                print_string( String( .str = "Error: (Interpreter) Tried to move immediate value into immediate value\n", .length = 72 ) );
+                            } break;
+                            case RELATIVE_OFFSET:
+                            case DIRECT_OFFSET:
+                            case REGISTER: MOVQ(instruction->data, REG64(runtime, instruction->to_reg)); break;
+                        }
+                    } break;
+                    case RELATIVE_OFFSET:
+                    case DIRECT_OFFSET:
+                    case REGISTER: {
+                        switch (instruction->to_mode) {
 
-        switch (instruction->from_mode) {
-        case IMMEDIATE: {
-            switch (instruction->to_mode) {
-            case IMMEDIATE:{
-                print_string( String( .str = "Error: (Interpreter) Tried to move immediate value into immediate value\n", .length = 72 ) );
-            } break;
-            case RELATIVE_OFFSET:
-            case DIRECT_OFFSET:
-            case REGISTER: MOVQ(instruction->data, REG64(runtime, instruction->to_reg)); break;
-            }
-        } break;
-        case RELATIVE_OFFSET:
-        case DIRECT_OFFSET:
-        case REGISTER: {
-            switch (instruction->to_mode) {
+                            case IMMEDIATE: {
+                                print_string( String( .str = "Error: (Interpreter) Tried to move register into immediate value\n", .length = 65 ) );
+                            } break;
+                            case RELATIVE_OFFSET:
+                            case DIRECT_OFFSET:
+                            case REGISTER: {
+                                MOVQ( REG64(runtime, instruction->from_reg), REG64(runtime, instruction->to_reg) );
+                            } break;
+                        }
+                    } break;
+                }
 
-            case IMMEDIATE: {
-                print_string( String( .str = "Error: (Interpreter) Tried to move register into immediate value\n", .length = 65 ) );
             } break;
-            case RELATIVE_OFFSET:
-            case DIRECT_OFFSET:
-            case REGISTER: {
-                MOVQ( REG64(runtime, instruction->from_reg), REG64(runtime, instruction->to_reg) );
+            case INSTR_ADD: {
+                print_string(String( .str = "Interpreter: ADD\n", .length = 17));
+
             } break;
-            }
-        } break;
+            case INSTR_SUB: {
+                print_string(String( .str = "Interpreter: SUB\n", .length = 17));
+
+            } break;
+            case INSTR_IDIV: {
+                print_string(String( .str = "Interpreter: IDIV\n", .length = 18));
+
+            } break;
+            case INSTR_IMUL: {
+                print_string(String( .str = "Interpreter: IMUL\n", .length = 18));
+
+            } break;
+            case INSTR_LEA: {
+                print_string(String( .str = "Interpreter: LEA\n", .length = 17));
+
+            } break;
+            case INSTR_ENTER: {
+                print_string(String( .str = "Interpreter: ENTER\n", .length = 19));
+
+            } break;
+            case INSTR_LEAVE: {
+                print_string(String( .str = "Interpreter: LEAVE\n", .length = 19));
+
+            } break;
+            case INSTR_RET: {
+                print_string(String( .str = "Interpreter: RET\n", .length = 17));
+
+            } break;
+            case INSTR_CALL: {
+                print_string(String( .str = "Interpreter: CALL\n", .length = 18));
+
+            } break;
+            case INSTR_PUSH: {
+                print_string(String( .str = "Interpreter: PUSH\n", .length = 18));
+
+                switch (instruction->from_mode) {
+                    case IMMEDIATE: {
+                        // switch (a->from_size) {
+
+                        // case BYTES_8: PUSHQ(runtime, a->data); break;
+                        // case BYTES_4: PUSHQ(runtime, a->data); break;
+                        // case BYTES_2: PUSHQ(runtime, a->data); break;
+                        // case BYTES_1: PUSHQ(runtime, a->data); break;
+                        // }
+                        PUSHQ(runtime, instruction->data);
+                    } break;
+                    case RELATIVE_OFFSET: {
+
+                    } break;
+                    case DIRECT_OFFSET: {
+                        int total_offset = instruction->offset * instruction->offset_size;
+                        PUSHQ(runtime, OFFSET(total_offset, REG64(runtime, instruction->from_reg), int64_t));
+                    } break;
+                    case REGISTER: {
+                        PUSHQ(runtime, REG64(runtime, instruction->from_reg));
+                    } break;
+                }
+
+            } break;
+            case INSTR_POP: {
+                print_string(String( .str = "Interpreter: POP\n", .length = 17));
+
+            } break;
         }
-
-    } break;
-    case INSTR_ADD: {
-        print_string(String( .str = "Interpreter: ADD\n", .length = 17));
-
-    } break;
-    case INSTR_SUB: {
-        print_string(String( .str = "Interpreter: SUB\n", .length = 17));
-
-    } break;
-    case INSTR_IDIV: {
-        print_string(String( .str = "Interpreter: IDIV\n", .length = 18));
-
-    } break;
-    case INSTR_IMUL: {
-        print_string(String( .str = "Interpreter: IMUL\n", .length = 18));
-
-    } break;
-    case INSTR_LEA: {
-        print_string(String( .str = "Interpreter: LEA\n", .length = 17));
-
-    } break;
-    case INSTR_ENTER: {
-        print_string(String( .str = "Interpreter: ENTER\n", .length = 19));
-
-    } break;
-    case INSTR_LEAVE: {
-        print_string(String( .str = "Interpreter: LEAVE\n", .length = 19));
-
-    } break;
-    case INSTR_RET: {
-        print_string(String( .str = "Interpreter: RET\n", .length = 17));
-
-    } break;
-    case INSTR_CALL: {
-        print_string(String( .str = "Interpreter: CALL\n", .length = 18));
-
-    } break;
-    case INSTR_PUSH: {
-        print_string(String( .str = "Interpreter: PUSH\n", .length = 18));
-
-        switch (instruction->from_mode) {
-        case IMMEDIATE: {
-            // switch (a->from_size) {
-
-            // case BYTES_8: PUSHQ(runtime, a->data); break;
-            // case BYTES_4: PUSHQ(runtime, a->data); break;
-            // case BYTES_2: PUSHQ(runtime, a->data); break;
-            // case BYTES_1: PUSHQ(runtime, a->data); break;
-            // }
-             PUSHQ(runtime, instruction->data);
-        } break;
-        case RELATIVE_OFFSET: {
-
-        } break;
-        case DIRECT_OFFSET: {
-            int total_offset = instruction->offset * instruction->offset_size;
-            PUSHQ(runtime, OFFSET(total_offset, REG64(runtime, instruction->from_reg), int64_t));
-        } break;
-        case REGISTER: {
-            PUSHQ(runtime, REG64(runtime, instruction->from_reg));
-        } break;
-        }
-
-    } break;
-    case INSTR_POP: {
-        print_string(String( .str = "Interpreter: POP\n", .length = 17));
-
-    } break;
     }
 }
 
