@@ -52,4 +52,4 @@ Mkfile.old
 dkms.conf
 .gdb_history
 a.out
-build/
+build/.cache
