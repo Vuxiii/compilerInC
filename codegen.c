@@ -62,7 +62,6 @@ void gen_expression( struct Context *context, struct Node *expr ) {
                                  .from_mode = IMMEDIATE,
                                  .data = expr->contents.decimal_number.inum
                                  );
-
         } break;
         case NODE_BINARY_OPERATION: {
             gen_expression( context, expr->contents.binary_operation.left );
