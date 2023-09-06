@@ -1,4 +1,4 @@
-#include "codegen.h"
+#include "x86.h"
 #include "context.h"
 #include "token.h"
 #include "lexer.h"
@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 
-void convert_to_ir( struct Context *context, struct Node *AST) {
+void convert_to_x86( struct Context *context, struct Node *AST) {
     switch (AST->node_type) {
         case NODE_FN_DECLARATION: {
 

@@ -1,7 +1,9 @@
 #include "parser.h"
 #include "context.h"
 #include "interpreter.h"
-#include "codegen.h"
+#include "x86.h"
+#include "symbols.h"
+#include "visitor.h"
 
 #include <stdint.h>
 #include <stdio.h>
@@ -55,7 +57,18 @@ int main( int argc, char **argv ) {
     // print_tokens(&context);
 
     struct Node *root = parse(&context);
-    
+
+    struct Visitor symbol_visitor = (struct Visitor) {
+        .kind = SYMBOL_VISITOR,
+        .contents.symbol_visitor = (struct Symbol_Visitor) {
+            .context = &context,
+            .current_block = 0,
+            .symbol_table = malloc(sizeof(struct Symbol_Table) * 1)
+        }
+    };
+
+    visit(root, &symbol_visitor);
+
     struct Runtime runtime = (struct Runtime) {
         .stack_size = STACK_SIZE / sizeof(int64_t),
         .heap_size  = HEAP_SIZE / sizeof(int64_t),
@@ -65,7 +78,7 @@ int main( int argc, char **argv ) {
 
     RSP(&runtime) = (STACK_SIZE) / sizeof(int64_t) - 1;
 
-    convert_to_ir(&context, root);
+    convert_to_x86(&context, root);
     
     interpret(&runtime, &context);
 

@@ -3,7 +3,7 @@
 
 #include "lexer.h"
 #include "token.h"
-
+#include "ir.h"
 
 struct Context {
     struct Token TOKEN_QUEUE[TOKEN_QUEUE_SIZE];
@@ -18,4 +18,8 @@ struct Context {
     struct ASM_Instruction *ASM_INSTRUCTION_BUFFER;
     unsigned int instruction_index;
     unsigned int instruction_size;
+
+    struct IR_Block *ir_blocks;
+    unsigned int ir_blocks_count;
+    unsigned int ir_blocks_size;
 };

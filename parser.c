@@ -80,7 +80,7 @@ struct Node *parse_function_declaration( struct Context *context ) {
 
     assert_token_type(context, .expected_token = TOKEN_RPAREN, .which = CURRENT,
                              .error_string = String( 
-                                 .str = "Unexpected Token while prasing function declaration. Expected ')'\n",
+                                 .str = "Unexpected Token while parsing function declaration. Expected ')'\n",
                                  .length = 66));
     
     struct Node *out = get_empty_node();
@@ -172,7 +172,7 @@ struct Node *parse_statement( struct Context *context ) {
                     some_statement = assignment;
                 } break;
                 case TOKEN_LPAREN: {
-                    // Must be a funciton call?
+                    // Must be a function call?
                     next_token(context);
                     
                     struct Node *function_call = get_empty_node();

@@ -2,8 +2,8 @@
 
 #include "string.h"
 #include "token.h"
-#include "codegen.h"
 #include "context.h"
+#include "x86.h"
 
 #define WHITE_SPACE 32
 

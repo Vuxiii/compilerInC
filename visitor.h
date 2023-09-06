@@ -1,8 +1,9 @@
 #pragma once
-
+#include <stdint.h>
 #include "context.h"
 #include "token.h"
-
+#include "string.h"
+#include "defines.h"
 enum Visitor_Kind {
     SYMBOL_VISITOR
 };
@@ -16,7 +17,17 @@ enum Visitor_State {
 
 struct Symbol_Visitor {
     struct Context *context;
-    
+
+    uint64_t current_block;
+    // Insert the size and count of symbol tables.
+    ARRAY(struct Symbol_Table) symbol_table;
+};
+
+struct Symbol_Table {
+    uint64_t count;
+    uint64_t size;
+
+    ARRAY(struct String) symbols;
 };
 
 struct Visitor {

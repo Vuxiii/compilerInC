@@ -3,6 +3,7 @@
 #include "token.h"
 #include "context.h"
 #include <stdint.h>
+struct Context;
 
 enum INSTRUCTION {
     INSTR_MOVE,
@@ -71,7 +72,7 @@ struct ASM_Instruction {
 #define APPEND_ASM_STATEMENT(context, ...) ((context)->ASM_INSTRUCTION_BUFFER[(context)->instruction_index++]) = (struct ASM_Instruction) {__VA_ARGS__}
 
 
-void convert_to_ir( struct Context *context, struct Node *AST );
+void convert_to_x86( struct Context *context, struct Node *AST );
 
 void gen_function_decl( struct Context *context, struct Declaration_Function *fn );
 

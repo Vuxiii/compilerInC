@@ -14,3 +14,11 @@ void print_int( int num ) {
     } while (num != 0);
     write(STDOUT_FILENO, &s[10-len], len);
 }
+int cmp_strings( struct String *left, struct String *right ) {
+    if (left->length != right->length) return 0;
+    for (unsigned long i = 0; i < left->length; ++i) {
+        if (left->str[i] != right->str[i])
+            return 0;
+    }
+    return 1;
+}
