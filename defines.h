@@ -21,5 +21,5 @@ DECL_RESULT(UInt64Result, uint64_t)
 
 #define MATCH(expr, decl) \
     decl; \
-    switch (expr)
+    switch (expr)         \
 
