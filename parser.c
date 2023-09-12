@@ -444,7 +444,7 @@ struct Node *parse_declaration( struct Context *context ) {
                                  .length = 81));
     // Current: TOKEN_IDENTIFIER
     
-    struct Token *lhs_identifier = current_token(context);
+    struct Token lhs_identifier = *current_token(context);
     next_token(context);
 
     switch (current_token(context)->token_type) {
@@ -471,14 +471,14 @@ struct Node *parse_declaration( struct Context *context ) {
     
                             // Fill decl
                             decl->contents.variable_declaration = (struct Declaration_Variable){
-                                .variable_name = lhs_identifier->data.str,
+                                .variable_name = lhs_identifier.data.str,
                                 .variable_type = type
                             };
                             decl->line = let_token.line;
                             decl->left = let_token.left;
                             decl->right = rhs->right;
                             decl->node_type = NODE_VARIABLE_DECLARATION;
-                            lhs->contents.symbol.str = lhs_identifier->data.str;
+                            lhs->contents.symbol.str = lhs_identifier.data.str;
                             assignment->contents.assignment = (struct Assignment){
                                 .lhs = lhs,
                                 .rhs = rhs
@@ -500,7 +500,7 @@ struct Node *parse_declaration( struct Context *context ) {
                            // [1] LET IDENTIFIER : IDENTIFIER
                             struct Node *decl = get_empty_node();
                             decl->contents.variable_declaration = (struct Declaration_Variable){
-                                .variable_name = lhs_identifier->data.str,
+                                .variable_name = lhs_identifier.data.str,
                                 .variable_type = type
                             };
                             decl->line = let_token.line;
@@ -539,13 +539,13 @@ struct Node *parse_declaration( struct Context *context ) {
 
                     struct Node *array_decl = get_empty_node();
                     array_decl->contents.array_declaration = (struct Declaration_Array){
-                        .array_name = lhs_identifier->data.str,
+                        .array_name = lhs_identifier.data.str,
                         .array_type = type->data.str,
                         .length = length.data.inum
                     };
-                    array_decl->left = lhs_identifier->left;
+                    array_decl->left = lhs_identifier.left;
                     array_decl->right = length.right;
-                    array_decl->line = lhs_identifier->line;
+                    array_decl->line = lhs_identifier.line;
                     array_decl->node_type = NODE_ARRAY_DECLARATION;
                     return array_decl;
                 } break;
@@ -583,15 +583,15 @@ struct Node *parse_declaration( struct Context *context ) {
                                 .length = 74 ));
 
                     struct_declaration->contents.struct_declaration = (struct Declaration_Struct) {
-                        .struct_name = lhs_identifier->data.str,
+                        .struct_name = lhs_identifier.data.str,
                         .fields = parameter_list,
                         .count = -1
                     };
 
                     struct_declaration->node_type = NODE_STRUCT_DECLARATION;
-                    struct_declaration->left = lhs_identifier->left;
+                    struct_declaration->left = lhs_identifier.left;
                     struct_declaration->right = current_token(context)->right;
-                    struct_declaration->line = lhs_identifier->line;
+                    struct_declaration->line = lhs_identifier.line;
                     return struct_declaration;
                 }
                 default: {

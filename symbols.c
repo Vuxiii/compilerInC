@@ -38,6 +38,7 @@ void collect_symbols(struct Visitor *_visitor, struct Node *root) {
                         table->size *= 2;
                     }
                     table->symbols[++table->count] = *decl->variable_name;
+                    // At this point we can also do type assigning.
                 case STATE_OK: return;
             }
         } break;
