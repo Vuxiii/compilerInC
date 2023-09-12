@@ -5,6 +5,7 @@
 #include "symbols.h"
 #include "visitor.h"
 
+#include <stdatomic.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -62,12 +63,33 @@ int main( int argc, char **argv ) {
         .kind = SYMBOL_VISITOR,
         .contents.symbol_visitor = (struct Symbol_Visitor) {
             .context = &context,
-            .current_block = 0,
-            .symbol_table = malloc(sizeof(struct Symbol_Table) * 1)
+
+            .symbol_table_size = 1,
+            .symbol_table_count = 0,
+            .symbol_table = malloc(sizeof(struct Symbol_Table) * 1),
+            .table_names = malloc(sizeof(struct String) * 1)
         }
     };
 
+    symbol_visitor.contents.symbol_visitor.symbol_table[0] = (struct Symbol_Table) {
+        .size = 128,
+        .count = 0,
+        .symbols = malloc(sizeof(struct String) * 128)
+    };
+
+    
     visit(root, &symbol_visitor);
+
+    
+    for (uint64_t i = 0; i < symbol_visitor.contents.symbol_visitor.symbol_table_count; ++i) {
+        // Each function
+        struct Symbol_Table *table = &symbol_visitor.contents.symbol_visitor.symbol_table[i];
+        printf("Function [%s]\n", symbol_visitor.contents.symbol_visitor.table_names[i].str);
+        for (uint64_t j = 0; j < table->count; ++j) {
+            printf("\tSymbol [%s]\n", table->symbols[j].str);
+        }
+    }
+
 
     struct Runtime runtime = (struct Runtime) {
         .stack_size = STACK_SIZE / sizeof(int64_t),

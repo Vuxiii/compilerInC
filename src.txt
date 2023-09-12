@@ -2,4 +2,10 @@ fn main() {
     let a: int;
     a = 2 + 4 * 3;
 }
+
+fn another_function() {
+    let b: int;
+    let c: int;
+    let a: int;
+}
 $

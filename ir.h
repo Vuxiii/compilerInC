@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include "context.h"
 #include "string.h"
+#include "lexer.h"
 struct Context;
 enum IR_Opcode {
     ADD,

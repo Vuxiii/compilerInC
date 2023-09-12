@@ -18,9 +18,10 @@ enum Visitor_State {
 struct Symbol_Visitor {
     struct Context *context;
 
-    uint64_t current_block;
-    // Insert the size and count of symbol tables.
+    uint64_t symbol_table_count;
+    uint64_t symbol_table_size;
     ARRAY(struct Symbol_Table) symbol_table;
+    ARRAY(struct String) table_names;
 };
 
 struct Symbol_Table {

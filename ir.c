@@ -2,9 +2,12 @@
 // Created by William Juhl on 05/09/2023.
 //
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <printf.h>
 #include "ir.h"
+#include "context.h"
+#include "lexer.h"
 
 void convert_to_ir( struct Node *AST, struct Context *context ) {
     switch (AST->node_type) {
