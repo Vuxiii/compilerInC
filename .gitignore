@@ -54,3 +54,4 @@ dkms.conf
 a.out
 build/.cache
 .cache
+.idea/
