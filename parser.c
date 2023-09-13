@@ -1011,7 +1011,7 @@ struct Node *get_empty_node(void) {
     if (NODE_BUFFER_INDEX == NODE_BUFFER_SIZE) {
         // For now just realloc....
 
-        NODE_BUFFER = realloc(NODE_BUFFER, NODE_BUFFER_SIZE * 2);
+        NODE_BUFFER = realloc(NODE_BUFFER, sizeof(struct Node) * NODE_BUFFER_SIZE * 2);
         if (NODE_BUFFER == NULL) {
             print_string(String( .str = "Out of memory\n", .length = 14));
             _Exit(2);

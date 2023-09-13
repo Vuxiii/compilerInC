@@ -126,7 +126,7 @@ struct ASM_Instruction *get_empty_asm_instruction( struct Context *context ) {
     if (context->instruction_index == context->instruction_size) {
         // For now just realloc....
 
-        context->ASM_INSTRUCTION_BUFFER = realloc(context->ASM_INSTRUCTION_BUFFER, context->instruction_size * 2);
+        context->ASM_INSTRUCTION_BUFFER = realloc(context->ASM_INSTRUCTION_BUFFER, sizeof(struct ASM_Instruction) * context->instruction_size * 2);
         if (context->ASM_INSTRUCTION_BUFFER == NULL) {
             print_string(String( .str = "Out of memory\n", .length = 14));
             _Exit(3);

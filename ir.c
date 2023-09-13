@@ -73,7 +73,7 @@ struct IR_Block *get_ir_block( struct Context *context, uint64_t descriptor ) {
 
 uint64_t get_next_ir_block(struct Context *context ) {
     if (context->ir_blocks_count == context->ir_blocks_size) {
-        context->ir_blocks = realloc(context->ir_blocks, context->ir_blocks_size * 2);
+        context->ir_blocks = realloc(context->ir_blocks, sizeof(struct IR_Block) * context->ir_blocks_size * 2);
         if (context->ir_blocks == NULL) {
             printf("Not enough memory to realloc ir blocks\n");
             exit(1);

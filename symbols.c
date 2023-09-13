@@ -49,19 +49,32 @@ void collect_symbols(struct Visitor *_visitor, struct Node *root) {
 void insert_function( struct Symbol_Visitor *visitor, struct Declaration_Function *fn ) {
     if (visitor->symbol_table_count == visitor->symbol_table_size) {
         // Increase the size of the table
-        visitor->symbol_table = realloc( visitor->symbol_table, visitor->symbol_table_size * 2 );
-        if (visitor->symbol_table == NULL) {
+        visitor->symbol_table = realloc( visitor->symbol_table, sizeof(struct Symbol_Table) * visitor->symbol_table_size * 2 );
+        visitor->table_names = realloc( visitor->table_names, sizeof(struct String) * visitor->symbol_table_size * 2 );
+
+        if (visitor->symbol_table == NULL || visitor->table_names == NULL) {
             print_string( String( .str = "Not enough memory to increase the size of the function symbol tables\n", .length = 68));
             exit(2);
         }
         visitor->symbol_table_size *= 2;
     }
     // Add a new symbol table, and add it.
-    visitor->table_names[visitor->symbol_table_count++] = *fn->function_name;
+    visitor->table_names[visitor->symbol_table_count] = *fn->function_name;
+    visitor->symbol_table[visitor->symbol_table_count] = (struct Symbol_Table) {
+        .count = 0,
+        .size = 128,
+        .symbols = malloc(sizeof(struct String) * 128 )
+    };
+    if (visitor->symbol_table[visitor->symbol_table_count].symbols == NULL) {
+        print_string(String( .str = "Not enough memory to allocate space for a new Symbol Table\n",
+                                 .length = 59));
+        exit(2);
+    }
+    visitor->symbol_table_count++;
 }
 
 struct Symbol_Table *current_symbol_table( struct Symbol_Visitor *visitor ) {
-    return &visitor->symbol_table[visitor->symbol_table_count-1];
+    return visitor->symbol_table + (visitor->symbol_table_count-1);
 }
 
 
