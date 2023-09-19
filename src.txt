@@ -3,6 +3,17 @@ fn main() {
     a = 2 + 4 * 3;
 }
 
+fn struct_function() {
+    let my_struct :: struct {
+        a: int,
+        b: string
+    };
+}
+
+fn parameter_function(a: int, b: double) {
+
+}
+
 fn another_function() {
     let b: int;
     let c: int;

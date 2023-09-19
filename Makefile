@@ -5,7 +5,7 @@ BUILD=build
 
 # $(BUILD)/*.o expands to all .o files in the $(BUILD) directory
 # In this case, we'll get $(BUILD)/file1.o $(BUILD)/file2.o
-a.out: main.c symbols.o visitor.o x86.o error.o interpreter.o lexer.o parser.o ssa.o string.o ir.o
+a.out: main.c symbols.o visitor.o x86.o error.o interpreter.o lexer.o parser.o ssa.o string.o ir.o types.o
 
 	$(COMPILE) $< $(BUILD)/*.o -o $@
 

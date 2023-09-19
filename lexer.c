@@ -456,11 +456,11 @@ void next_token( struct Context *context ) {
 }
 
 struct Token *current_token(struct Context *context) {
-    return &context->TOKEN_QUEUE[context->current_token_index];
+    return &context->TOKEN_QUEUE[(int)context->current_token_index];
 }
 
 struct Token *peek_token(struct Context *context) {
-    return &context->TOKEN_QUEUE[context->peek_token_index];
+    return &context->TOKEN_QUEUE[(int)context->peek_token_index];
 }
 
 void print_tokens(struct Context *context) {

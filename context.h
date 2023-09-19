@@ -4,6 +4,7 @@
 #include "lexer.h"
 #include "token.h"
 #include "ir.h"
+#include "defines.h"
 
 struct Context {
     struct Token TOKEN_QUEUE[TOKEN_QUEUE_SIZE];
@@ -22,4 +23,9 @@ struct Context {
     struct IR_Block *ir_blocks;
     unsigned int ir_blocks_count;
     unsigned int ir_blocks_size;
+
+    unsigned int type_count;
+    unsigned int type_size;
+    ARRAY(struct User_Type) user_types;
+
 };

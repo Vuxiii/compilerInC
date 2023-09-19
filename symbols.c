@@ -3,6 +3,7 @@
 #include "token.h"
 #include "visitor.h"
 #include "ir.h"
+#include "error.h"
 
 void collect_symbols(struct Visitor *_visitor, struct Node *root) {
     struct Symbol_Visitor *visitor = &_visitor->contents.symbol_visitor;
@@ -19,6 +20,7 @@ void collect_symbols(struct Visitor *_visitor, struct Node *root) {
 
         } break;
         case NODE_STRUCT_DECLARATION: {
+            // Here we want to ensure correct offset placement for each individual field in the struct.
 
         } break;
         case NODE_PARAMETER_LIST: {
@@ -37,7 +39,14 @@ void collect_symbols(struct Visitor *_visitor, struct Node *root) {
                     // At this point we can also do type assigning.
                 
                     return;
-                case STATE_OK: return; // It was already inserted
+                case STATE_OK:
+                    // It was already inserted
+                    // This is an error for now. We can maybe do some shadowing later on if that is cool.
+                    emit_error( visitor->context, .error_string = String(
+                            .str = "Tried to redeclare a symbol\n",
+                            .length = 28
+                            ), .node = root);
+                    return;
             }
         } break;
         default: {

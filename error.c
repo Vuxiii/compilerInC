@@ -27,6 +27,7 @@ void emit_error_( struct Context *context, struct Error_Params error ) {
                             .length = error.node->right - error.node->left));
 
     }
+    print_string( String( .str = "\n", .length = 1 ) );
     _Exit(-1);
 }
 
