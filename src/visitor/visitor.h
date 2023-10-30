@@ -1,9 +1,9 @@
 #pragma once
 #include <stdint.h>
-#include "context.h"
-#include "token.h"
-#include "string.h"
-#include "defines.h"
+#include "../context.h"
+#include "../token.h"
+#include "../string.h"
+#include "../defines.h"
 enum Visitor_Kind {
     SYMBOL_VISITOR
 };

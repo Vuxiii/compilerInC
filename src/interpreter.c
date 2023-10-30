@@ -114,9 +114,9 @@ void interpret( struct Runtime *runtime, struct Context *context ) {
 
 void print_stack( struct Runtime *runtime, int n ) {
 
-    struct String *stk = String( .str = "Stack [", .length = 7 );
-    struct String *cls = String( .str = "]\t", .length = 2 );
-    struct String *nl = String( .str = "\n", .length = 1 );
+    struct String stk = String( .str = "Stack [", .length = 7 );
+    struct String cls = String( .str = "]\t", .length = 2 );
+    struct String nl = String( .str = "\n", .length = 1 );
 
     int64_t rsp = RSP(runtime);
 
@@ -131,17 +131,17 @@ void print_stack( struct Runtime *runtime, int n ) {
 
 void print_registers( struct Runtime *runtime ) {
 
-    struct String *rax = String( .str = "rax ", .length = 4 );
-    struct String *rbx = String( .str = "rbx ", .length = 4 );
-    struct String *rcx = String( .str = "rcx ", .length = 4 );
-    struct String *rdx = String( .str = "rdx ", .length = 4 );
-    struct String *rsi = String( .str = "rsi ", .length = 4 );
-    struct String *rdi = String( .str = "rdi ", .length = 4 );
-    struct String *rsp = String( .str = "rsp ", .length = 4 );
-    struct String *rbp = String( .str = "rbp ", .length = 4 );
+    struct String rax = String( .str = "rax ", .length = 4 );
+    struct String rbx = String( .str = "rbx ", .length = 4 );
+    struct String rcx = String( .str = "rcx ", .length = 4 );
+    struct String rdx = String( .str = "rdx ", .length = 4 );
+    struct String rsi = String( .str = "rsi ", .length = 4 );
+    struct String rdi = String( .str = "rdi ", .length = 4 );
+    struct String rsp = String( .str = "rsp ", .length = 4 );
+    struct String rbp = String( .str = "rbp ", .length = 4 );
 
-    struct String *tab = String( .str = "\t", .length = 1 );
-    struct String *nl  = String( .str = "\n", .length = 1 );
+    struct String tab = String( .str = "\t", .length = 1 );
+    struct String nl  = String( .str = "\n", .length = 1 );
 
 
     print_string(rax);

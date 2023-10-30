@@ -4,8 +4,15 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+void emit_allocation_error_( struct Allocation_Error_Params error ) {
+    print_string( String( .str = "Unable to allocate memory for [", .length = 31 ) );
+    print_string( error.error_message );
+    print_string( String( .str = "] Exiting...\n", .length = 13 ) );
+    _Exit(-1);
+}
+
 void emit_error_( struct Context *context, struct Error_Params error ) {
-    print_string(context->filename);
+    print_string(*context->filename);
     print_string(String(.str = ":", .length = 1));
     if (error.token)
         print_int((int)error.token->line);
@@ -13,7 +20,7 @@ void emit_error_( struct Context *context, struct Error_Params error ) {
         print_int((int)error.node->line);
         
     print_string(String(.str = ": error: ", .length = 9));
-    if (error.error_string)
+    // if (error.error_string)
         print_string(error.error_string);
     print_string(String(.str = "\n", .length = 1));
     if (error.token) {

@@ -1,28 +1,44 @@
-COMPILER=clang
-OPTIONS=-g -pedantic -Wall -Wextra -Wshadow -Wunreachable-code
-COMPILE=$(COMPILER) $(OPTIONS)
-BUILD=build
+COMPILER = clang
+OPTIONS = -g -pedantic -Wall -Wextra -Wshadow -Wunreachable-code
+COMPILE = $(COMPILER) $(OPTIONS)
+BUILD = build
+SRCDIR = src
 
-# $(BUILD)/*.o expands to all .o files in the $(BUILD) directory
-# In this case, we'll get $(BUILD)/file1.o $(BUILD)/file2.o
-a.out: main.c symbols.o visitor.o x86.o error.o interpreter.o lexer.o parser.o ssa.o string.o ir.o types.o
+# Define source file extensions
+SRC_EXT = c
 
-	$(COMPILE) $< $(BUILD)/*.o -o $@
+# Find all source files in SRCDIR and its subdirectories
+SRC_FILES = $(shell find $(SRCDIR) -type f -name *.$(SRC_EXT))
 
-%.o: %.c build
-	$(COMPILE) -c $< -o $(BUILD)/$@
+# Generate object file paths from source file paths
+OBJ_FILES = $(patsubst $(SRCDIR)/%.$(SRC_EXT),$(BUILD)/%.$(SRC_EXT).o,$(SRC_FILES))
 
+# Define the final target
+TARGET = a.out
 
-# $(BUILD)/file2.o: file2.cpp build
-# 	$(COMPILE) -c $< -o $@
+# Create a list of unique subdirectories in SRCDIR
+SUBDIRS := $(sort $(dir $(SRC_FILES)))
 
-# Make the build directory if it doesn't exist
-build:
-	mkdir -p $(BUILD)
+# Create subdirectories in BUILD directory
+BUILD_SUBDIRS := $(patsubst $(SRCDIR)/%, $(BUILD)/%, $(SUBDIRS))
 
-# Delete the build directory and program
+# Define phony targets
+.PHONY: all clean
+
+# Default target
+all: $(BUILD) $(BUILD_SUBDIRS) $(TARGET)
+
+# Build the executable
+$(TARGET): $(OBJ_FILES)
+	$(COMPILE) $^ -o $@
+
+# Build object files from source files
+$(BUILD)/%.$(SRC_EXT).o: $(SRCDIR)/%.$(SRC_EXT) | $(BUILD) $(BUILD_SUBDIRS)
+	$(COMPILE) -c $< -o $@
+
+# Create BUILD and BUILD_SUBDIRS directories
+$(BUILD) $(BUILD_SUBDIRS):
+	mkdir -p $@
+
 clean:
-	rm -rf $(BUILD) a.out
-
-# These rules do not correspond to a specific file
-.PHONY: build clean
+	rm -rf $(BUILD) $(TARGET)

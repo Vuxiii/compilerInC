@@ -1,13 +1,14 @@
 #include <stdlib.h>
 #include "symbols.h"
-#include "token.h"
+#include "../token.h"
 #include "visitor.h"
-#include "ir.h"
-#include "error.h"
+#include "../ir.h"
+#include "../error.h"
 
 void collect_symbols(struct Visitor *_visitor, struct Node *root) {
-    struct Symbol_Visitor *visitor = &_visitor->contents.symbol_visitor;
     if (root == NULL) return;
+
+    struct Symbol_Visitor *visitor = &_visitor->contents.symbol_visitor;
     switch (root->node_type) {
         case NODE_FN_DECLARATION: {
             // Possibly check if it already has been declared...

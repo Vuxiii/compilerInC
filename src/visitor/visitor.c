@@ -1,6 +1,6 @@
 #include "visitor.h"
 #include "symbols.h"
-#include "token.h"
+#include "../token.h"
 
 void visit( struct Node *node, struct Visitor *visitor ) {
     visitor->state = VISITOR_NODE_ENTER;

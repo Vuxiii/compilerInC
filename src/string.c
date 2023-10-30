@@ -1,7 +1,7 @@
 #include "string.h"
 #include <unistd.h>
-void print_string( struct String *str ) {
-    write(STDOUT_FILENO, str->str, str->length);  
+void print_string( struct String str ) {
+    write(STDOUT_FILENO, str.str, str.length);  
 }
 void print_int( int num ) {
     char s[10] = {'0', '0', '0', '0', '0', '0', '0', '0', '0', '0'};

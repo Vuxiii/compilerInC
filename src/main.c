@@ -2,8 +2,8 @@
 #include "context.h"
 #include "interpreter.h"
 #include "x86.h"
-#include "symbols.h"
-#include "visitor.h"
+#include "visitor/symbols.h"
+#include "visitor/visitor.h"
 
 #include <stdatomic.h>
 #include <stdint.h>
@@ -50,7 +50,7 @@ int main( int argc, char **argv ) {
         .current_line = 1,
         .current_position = input,
         .file_start = input,
-        .filename = String( .str = filename, .length = strlen(filename) ),
+        .filename = &String( .str = filename, .length = strlen(filename) ),
         .instruction_index = 0,
         .instruction_size = sizeof(struct ASM_Instruction) * 1024,
         .ASM_INSTRUCTION_BUFFER = malloc(sizeof(struct ASM_Instruction) * 1024)

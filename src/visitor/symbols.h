@@ -1,7 +1,7 @@
 #pragma once
-#include "token.h"
+#include "../token.h"
 #include "visitor.h"
-#include "defines.h"
+#include "../defines.h"
 #include <stdint.h>
 
 void collect_symbols( struct Visitor *_visitor, struct Node *root );
