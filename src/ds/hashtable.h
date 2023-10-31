@@ -6,16 +6,21 @@
 #define HASHTABLE_SIZE 1000
 #define HASHTABLE_THRESHHOLD 0.8
 struct HashTable {
-    ARRAY(struct String *) items;
+    ARRAY(struct HT_Entry) items;
     uint32_t size;
     uint32_t count;
 };
 
+struct HT_Entry {
+    struct String *key;
+    void *value;
+};
+
 uint32_t ht_hash(struct HashTable *table, struct String *key);
 
-void ht_insert(struct HashTable *table, struct String *key, struct String *value);
+void ht_insert(struct HashTable *table, struct String *key, void *value);
 
-struct String *ht_get(struct HashTable *table, struct String *key);
+void *ht_get(struct HashTable *table, struct String *key);
 
 int ht_contains(struct HashTable *table, struct String *key);
 

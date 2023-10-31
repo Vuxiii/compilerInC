@@ -64,45 +64,38 @@ int main( int argc, char **argv ) {
         .contents.symbol_visitor = (struct Symbol_Visitor) {
             .context = &context,
 
-            .symbol_table_size = 1,
-            .symbol_table_count = 0,
-            .symbol_table = malloc(sizeof(struct Symbol_Table) * 1),
-            .table_names = malloc(sizeof(struct String) * 1)
+            .function_size = 1,
+            .function_count = 0,
+            .functions = malloc(sizeof(ARRAY(struct Symbol_Table *)))
         }
     };
 
-    symbol_visitor.contents.symbol_visitor.symbol_table[0] = (struct Symbol_Table) {
-        .size = 128,
-        .count = 0,
-        .symbols = malloc(sizeof(struct String) * 128)
-    };
-
-    
     visit(root, &symbol_visitor);
 
     
-    for (uint64_t i = 0; i < symbol_visitor.contents.symbol_visitor.symbol_table_count; ++i) {
+    for (uint64_t i = 0; i < symbol_visitor.contents.symbol_visitor.function_count; ++i) {
         // Each function
-        struct Symbol_Table *table = &symbol_visitor.contents.symbol_visitor.symbol_table[i];
-        printf("Function [%s]\n", symbol_visitor.contents.symbol_visitor.table_names[i].str);
-        for (uint64_t j = 0; j < table->count; ++j) {
-            printf("\tSymbol [%s]\n", table->symbols[j].str);
-        }
+        struct Symbol_Table *table = symbol_visitor.contents.symbol_visitor.functions[i];
+        printf("Function [%s]\n", table->fn->function_name->str);
+        printf("\tCount [%d]\n", table->symbol_table.count);
+        // for (uint64_t j = 0; j < table->count; ++j) {
+        //     printf("\tSymbol [%s]\n", table->symbols[j].str);
+        // }
     }
 
 
-    struct Runtime runtime = (struct Runtime) {
-        .stack_size = STACK_SIZE / sizeof(int64_t),
-        .heap_size  = HEAP_SIZE / sizeof(int64_t),
-        .stack = malloc(sizeof(int64_t) * STACK_SIZE),
-        .heap  = malloc(sizeof(int64_t) * HEAP_SIZE),
-    };
+    // struct Runtime runtime = (struct Runtime) {
+    //     .stack_size = STACK_SIZE / sizeof(int64_t),
+    //     .heap_size  = HEAP_SIZE / sizeof(int64_t),
+    //     .stack = malloc(sizeof(int64_t) * STACK_SIZE),
+    //     .heap  = malloc(sizeof(int64_t) * HEAP_SIZE),
+    // };
 
-    RSP(&runtime) = (STACK_SIZE) / sizeof(int64_t) - 1;
+    // RSP(&runtime) = (STACK_SIZE) / sizeof(int64_t) - 1;
 
-    convert_to_x86(&context, root);
+    // convert_to_x86(&context, root);
     
-    interpret(&runtime, &context);
+    // interpret(&runtime, &context);
 
     return 0;
 }

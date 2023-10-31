@@ -4,6 +4,8 @@
 #include "../token.h"
 #include "../string.h"
 #include "../defines.h"
+#include "../ds/hashtable.h"
+
 enum Visitor_Kind {
     SYMBOL_VISITOR
 };
@@ -18,17 +20,15 @@ enum Visitor_State {
 struct Symbol_Visitor {
     struct Context *context;
 
-    uint64_t symbol_table_count;
-    uint64_t symbol_table_size;
-    ARRAY(struct Symbol_Table) symbol_table;
-    ARRAY(struct String) table_names;
+    uint64_t function_count;
+    uint64_t function_size;
+
+    ARRAY(struct Symbol_Table *) functions;
 };
 
 struct Symbol_Table {
-    uint64_t count;
-    uint64_t size;
-
-    ARRAY(struct String) symbols;
+    struct Declaration_Function *fn;
+    struct HashTable symbol_table;
 };
 
 struct Visitor {

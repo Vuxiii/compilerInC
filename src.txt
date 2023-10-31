@@ -1,8 +1,8 @@
 fn main() {
-    let a: int;
-    a = 2 + 4 * 3;
+    let variable_1: int;
+    variable_1 = 2 + 4 * 3;
 }
-
+$
 fn struct_function() {
     let my_struct :: struct {
         a: int,
