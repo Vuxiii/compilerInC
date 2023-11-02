@@ -59,7 +59,7 @@ void collect_symbols(struct Visitor *_visitor, struct Node *root) {
 void insert_function( struct Symbol_Visitor *visitor, struct Declaration_Function *fn ) {
     if (visitor->function_count == visitor->function_size) {
         // Increase the size of the table
-        visitor->functions = reallocarray( visitor->functions, visitor->function_size * 2, sizeof(struct Symbol_Table *) );
+        visitor->functions = realloc( visitor->functions, visitor->function_size * 2 * sizeof(struct SymbolTable *) );
 
         if (visitor->functions == NULL) {
             emit_allocation_error(String( .str = "Symbol Table", .length = 12 ));
