@@ -1,7 +1,7 @@
 #include "parser.h"
 #include "lexer.h"
-#include "error.h"
-#include "string.h"
+#include "../error.h"
+#include "../ds/string.h"
 #include "token.h"
 #include <stdlib.h>
 #include <unistd.h>
@@ -82,7 +82,9 @@ struct Node *parse_function_declaration( struct Context *context ) {
                              .error_string = String( 
                                  .str = "Unexpected Token while parsing function declaration. Expected ')'\n",
                                  .length = 66));
-    
+
+    // At this stage check for implicit void return type or a given type.
+
     struct Node *out = get_empty_node();
 
     struct Node *body = parse_statement(context);
@@ -97,9 +99,18 @@ struct Node *parse_function_declaration( struct Context *context ) {
 }
 
 struct Node *parse_statement( struct Context *context ) {
+    // [1] { STATEMENT }
+    // [2] DECLARATION
+    // [3] SYMBOL = EXPRESSION
+    // [4] SYMBOL ( ?PARAMETER_LIST ) ;
+    // [5] for ( ?STATEMENT ; EXPRESSION ; ?STATEMENT ) STATEMENT
+    // [6] while ( EXPRESSION ) STATEMENT
+    // [7] each ( IDENTIFIER : SYMBOL ) STATEMENT
+
     struct Node *some_statement = NULL;
     switch (peek_token(context)->token_type) {
         case TOKEN_LCURLY: {
+            // [1]
             struct Node *scope = get_empty_node();
             next_token(context);
             scope->left = current_token(context)->left;
@@ -131,6 +142,7 @@ struct Node *parse_statement( struct Context *context ) {
             some_statement = scope;
         } break;
         case TOKEN_LET: {
+            // [2]
             next_token(context);
             some_statement = parse_declaration(context);
             assert_token_type(context, .which = PEEK, .expected_token = TOKEN_SEMICOLON, .error_string = String( 
@@ -148,6 +160,7 @@ struct Node *parse_statement( struct Context *context ) {
 
             switch (peek_token(context)->token_type) {
                 case TOKEN_EQ: {
+                    // [3]
                     next_token(context);
                     // Current: TOKEN_EQ
                     struct Node *assignment = get_empty_node();
@@ -172,6 +185,7 @@ struct Node *parse_statement( struct Context *context ) {
                     some_statement = assignment;
                 } break;
                 case TOKEN_LPAREN: {
+                    // [4]
                     // Must be a function call?
                     next_token(context);
                     
@@ -215,6 +229,7 @@ struct Node *parse_statement( struct Context *context ) {
 
         } break;
         case TOKEN_FOR: {
+            // [5]
             next_token(context);
             struct Token for_token = *current_token(context);
             struct Node *for_node = get_empty_node();
@@ -268,6 +283,7 @@ struct Node *parse_statement( struct Context *context ) {
             some_statement = for_node;
         } break;
         case TOKEN_WHILE: {
+            // [6]
             next_token(context);
             struct Node *while_node = get_empty_node();
             while_node->left = current_token(context)->left;
@@ -291,6 +307,7 @@ struct Node *parse_statement( struct Context *context ) {
             some_statement = while_node;
         } break;
         case TOKEN_EACH: {
+            // [7]
             next_token(context);
             struct Node *each_node = get_empty_node();
             each_node->left = current_token(context)->left;

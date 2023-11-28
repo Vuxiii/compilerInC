@@ -1,5 +1,5 @@
 #include "ssa.h"
-#include "string.h"
+#include "ds/string.h"
 #include <stddef.h>
 #include <stdlib.h>
 

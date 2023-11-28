@@ -1,7 +1,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include "symbols.h"
-#include "../token.h"
+#include "../frontend/token.h"
 #include "visitor.h"
 #include "../ir.h"
 #include "../error.h"
@@ -25,6 +25,32 @@ void collect_symbols(struct Visitor *_visitor, struct Node *root) {
         case NODE_STRUCT_DECLARATION: {
             // Here we want to ensure correct offset placement for each individual field in the struct.
 
+            print_string(String(.str = "Found a struct\n", .length = 15));
+            struct Declaration_Struct struct_declaration = root->contents.struct_declaration;
+            print_string( *struct_declaration.struct_name );
+            struct Node *current = struct_declaration.fields;
+            struct_declaration.count = 0;
+            while (current != NULL) {
+                if (current->node_type == NODE_PARAMETER_LIST) {
+                    struct Parameter_List *list = (struct Parameter_List *) &current->contents.parameter_list;
+                    print_string(String(.str = "\n      .", .length = 8));
+                    print_string( *list->parameter->contents.variable_declaration.variable_name );
+                    print_string(String(.str = ": ", .length = 2));
+                    print_string(*list->parameter->contents.variable_declaration.variable_type);
+                    current = list->next;
+                } else if (current->node_type == NODE_VARIABLE_DECLARATION) {
+                    print_string(String(.str = "\n      .", .length = 8));
+                    print_string( *current->contents.variable_declaration.variable_name );
+                    print_string(String(.str = ": ", .length = 2));
+                    print_string(*current->contents.variable_declaration.variable_type);
+
+                    current = NULL;
+                }
+                struct_declaration.count++;
+            }
+            print_string(String(.str = "\nFields: ", .length = 9));
+            print_int(struct_declaration.count);
+            print_string(String(.str = "\n", .length = 1));
         } break;
         case NODE_PARAMETER_LIST: {
             // Each parameter is implemented as a Variable Declaration.

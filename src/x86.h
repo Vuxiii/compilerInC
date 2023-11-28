@@ -1,6 +1,6 @@
 #pragma once
-#include "lexer.h"
-#include "token.h"
+#include "frontend/lexer.h"
+#include "frontend/token.h"
 #include "context.h"
 #include <stdint.h>
 struct Context;

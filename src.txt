@@ -1,14 +1,13 @@
-fn main() {
-    let variable_1: int;
-    variable_1 = 2 + 4 * 3;
-}
+
 fn struct_function() {
     let my_struct :: struct {
         a: int,
-        b: string
+        b: string,
+        nested: my_struct
     };
 }
 
+$
 fn parameter_function(a: int, b: double) {
 
 }

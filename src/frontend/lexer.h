@@ -1,9 +1,9 @@
 #pragma once
 
-#include "string.h"
+#include "../ds/string.h"
 #include "token.h"
-#include "context.h"
-#include "x86.h"
+#include "../context.h"
+#include "../x86.h"
 
 #define WHITE_SPACE 32
 

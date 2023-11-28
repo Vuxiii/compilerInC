@@ -1,8 +1,8 @@
 #pragma once
 #include <stdint.h>
 #include "../context.h"
-#include "../token.h"
-#include "../string.h"
+#include "../frontend/token.h"
+#include "../ds/string.h"
 #include "../defines.h"
 #include "../ds/hashtable.h"
 

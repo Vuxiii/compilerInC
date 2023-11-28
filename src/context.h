@@ -1,8 +1,8 @@
 #pragma once
 #define TOKEN_QUEUE_SIZE 2
 
-#include "lexer.h"
-#include "token.h"
+#include "frontend/lexer.h"
+#include "frontend/token.h"
 #include "ir.h"
 #include "defines.h"
 

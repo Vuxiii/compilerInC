@@ -1,9 +1,10 @@
-#include "parser.h"
+#include "frontend/parser.h"
 #include "context.h"
 #include "interpreter.h"
 #include "x86.h"
 #include "visitor/symbols.h"
 #include "visitor/visitor.h"
+#include "types.h"
 
 #include <stdatomic.h>
 #include <stdint.h>

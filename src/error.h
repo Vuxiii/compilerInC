@@ -1,7 +1,7 @@
 #pragma once
 
-#include "lexer.h"
-#include "string.h"
+#include "frontend/lexer.h"
+#include "ds/string.h"
 
 struct Allocation_Error_Params {
     struct String error_message;

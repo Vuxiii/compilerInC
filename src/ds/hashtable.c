@@ -17,7 +17,7 @@ uint32_t ht_hash(struct HashTable *table, struct String *key) {
 
 void ht_insert(struct HashTable *table, struct String *key, void *value) {
     // Check if threshold has been exceeded.
-    if ( table->count / table->size > (uint32_t)HASHTABLE_THRESHHOLD ) {
+    if ( table->count / table->size > (uint32_t)HASHTABLE_THRESHOLD ) {
 
         table->items = realloc(table->items, table->size * 2 * sizeof( struct HT_Entry ) );
         if ( table->items == NULL ) {

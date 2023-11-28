@@ -1,6 +1,6 @@
 #pragma once
 
-#include "string.h"
+#include "ds/string.h"
 
 struct SSA_Statement {
     struct String *var;

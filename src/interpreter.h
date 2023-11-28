@@ -1,6 +1,6 @@
 #pragma once
-#include "token.h"
-#include "lexer.h"
+#include "frontend/token.h"
+#include "frontend/lexer.h"
 #include <stdint.h>
 struct Runtime {
     int64_t *heap;

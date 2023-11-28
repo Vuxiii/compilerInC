@@ -1,6 +1,6 @@
 #pragma once
 
-#include "string.h"
+#include "../ds/string.h"
 enum TOKEN {
     TOKEN_EOP        = -1,
     TOKEN_LET        =  0,

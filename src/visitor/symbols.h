@@ -1,5 +1,5 @@
 #pragma once
-#include "../token.h"
+#include "../frontend/token.h"
 #include "visitor.h"
 #include "../defines.h"
 #include "../ds/hashtable.h"

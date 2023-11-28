@@ -1,7 +1,7 @@
 #include "x86.h"
 #include "context.h"
-#include "token.h"
-#include "lexer.h"
+#include "frontend/token.h"
+#include "frontend/lexer.h"
 
 #include <stdlib.h>
 

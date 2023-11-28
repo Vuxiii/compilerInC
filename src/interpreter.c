@@ -1,6 +1,6 @@
 #include "interpreter.h"
 #include "context.h"
-#include "string.h"
+#include "ds/string.h"
 
 #include <stdint.h>
 #include <stdio.h>

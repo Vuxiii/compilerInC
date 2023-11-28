@@ -7,7 +7,7 @@
 #include <printf.h>
 #include "ir.h"
 #include "context.h"
-#include "lexer.h"
+#include "frontend/lexer.h"
 
 void convert_to_ir( struct Node *AST, struct Context *context ) {
     switch (AST->node_type) {

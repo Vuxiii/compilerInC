@@ -1,10 +1,10 @@
 #pragma once
 #include <stdint.h>
-#include "../string.h"
+#include "string.h"
 #include "../defines.h"
 
 #define HASHTABLE_SIZE 1000
-#define HASHTABLE_THRESHHOLD 0.8
+#define HASHTABLE_THRESHOLD 0.8
 struct HashTable {
     ARRAY(struct HT_Entry) items;
     uint32_t size;
