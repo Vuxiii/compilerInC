@@ -6,6 +6,7 @@
 #include "../ir.h"
 #include "../error.h"
 #include "../ds/hashtable.h"
+#include "../types.h"
 
 void collect_symbols(struct Visitor *_visitor, struct Node *root) {
     if (root == NULL) return;
@@ -51,6 +52,13 @@ void collect_symbols(struct Visitor *_visitor, struct Node *root) {
             print_string(String(.str = "\nFields: ", .length = 9));
             print_int(struct_declaration.count);
             print_string(String(.str = "\n", .length = 1));
+
+            insert_type(visitor->context, (struct User_Type){
+               .field_count = struct_declaration.count,
+               .fields = fields,
+               .
+            });
+
         } break;
         case NODE_PARAMETER_LIST: {
             // Each parameter is implemented as a Variable Declaration.

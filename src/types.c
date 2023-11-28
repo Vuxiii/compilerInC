@@ -2,7 +2,7 @@
 #include "types.h"
 #include "error.h"
 
-uint32_t insert_type( struct Context *context, struct User_Type *user_type ) {
+uint32_t insert_type( struct Context *context, struct User_Type user_type ) {
     // Check size
     if (context->type_count == context->type_size) {
         context->user_types = realloc( context->user_types, sizeof(struct User_Type) * context->type_size * 2 );
@@ -12,7 +12,7 @@ uint32_t insert_type( struct Context *context, struct User_Type *user_type ) {
         }
         context->type_size *= 2;
     }
-    context->user_types[context->type_count] = *user_type;
+    context->user_types[context->type_count] = user_type;
     return context->type_count++;
 }
 

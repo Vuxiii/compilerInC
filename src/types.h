@@ -16,4 +16,4 @@ struct Result_User_Type get_type(struct Context *context, uint32_t descriptor );
 
 struct Result_uint32 get_field_number( struct Context *context, uint32_t descriptor, struct String *field);
 
-uint32_t insert_type( struct Context *context, struct User_Type *user_type );
+uint32_t insert_type( struct Context *context, struct User_Type user_type );
