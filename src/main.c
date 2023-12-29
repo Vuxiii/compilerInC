@@ -78,11 +78,11 @@ int main( int argc, char **argv ) {
     for (uint64_t i = 0; i < symbol_visitor.contents.symbol_visitor.function_count; ++i) {
         // Each function
         struct Symbol_Table *table = symbol_visitor.contents.symbol_visitor.functions[i];
-        printf("Function [%s]\n", table->fn->function_name);
-        printf("\tCount [%d]\n", table->symbol_table.count);
+        print("Function [{str}]\n", table->fn->function_name);
+        print("\tCount [{u32}]\n", table->symbol_table.count);
          for (uint64_t j = 0; j < table->symbol_table.size; ++j) {
              if (table->symbol_table.items[j].key.str != NULL)
-                printf("\tSymbol [%s]\n", table->symbol_table.items[j].key.str);
+                print("\tSymbol [{str}]\n", table->symbol_table.items[j].key);
          }
     }
 

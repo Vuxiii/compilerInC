@@ -48,5 +48,5 @@ target_compile_options(compiler PRIVATE -Wall -Wextra -pedantic)
 
 # Set output directory for the executable
 set_target_properties(compiler PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+        RUNTIME_OUTPUT_DIRECTORY .
 )

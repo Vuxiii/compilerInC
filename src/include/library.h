@@ -25,7 +25,7 @@ typedef int bool;
 
 #define ARRAY_LIST_DEFAULT_CAP 10
 typedef struct ArrayList {
-    void * _Nonnull data;
+    void *data;
     u32 len;
     u32 cap;
     const u32 elem_size;
@@ -43,14 +43,13 @@ ArrayList arraylist_new(u32 elem_size);
     u8: arraylist_push(list, &(u8){elem}),      \
     i8: arraylist_push(list, &(i8){elem}),      \
     u16: arraylist_push(list, &(u16){elem}),    \
-    i16: arraylist_push(list, &(i16){elem}))//,    \
-//    default: arraylist_push(list, elem))    \
+    i16: arraylist_push(list, &(i16){elem}))
 
-void arraylist_push(ArrayList * _Nonnull list, void * _Nonnull elem);
+void arraylist_push(ArrayList *list, void *elem);
 
-void arraylist_remove(ArrayList * _Nonnull list, u32 index);
+void arraylist_remove(ArrayList *list, u32 index);
 
-void arraylist_free(ArrayList * _Nonnull list);
+void arraylist_free(ArrayList *list);
 
 #define arraylist_last(list, type) ((type *)list.data)[list.len - 1]
 #define forward_it(list, type) for (type *it = (list).data; it != (type *)(list).data + (list).len; it++)
@@ -62,30 +61,30 @@ void arraylist_free(ArrayList * _Nonnull list);
 // ======= STRING LIBRARY =======
 
 typedef struct Str {
-    const char * _Nonnull str;
+    const char *str;
     u32 len;
 } Str;
 
 typedef struct FormatOption {
     Str format;
-    const Str (* _Nonnull printer)(va_list * _Nonnull args);
+    Str (*printer)(va_list * args);
 } FormatOption;
 #define MAX_FORMAT_OPTIONS 20
 
-void __attribute__((overloadable)) print(char *_Nonnull format, ...);
-void __attribute__((overloadable)) print(const Str format, ...);
+void __attribute__((overloadable)) print(char *format, ...);
+void __attribute__((overloadable)) print(Str format, ...);
 
-bool str_eq(const Str a, const Str b);
-const Str str_concat(const Str a, const Str b);
-const Str str_from_cstr(const char * _Nonnull cstr);
-bool str_a_contains_b(const Str a, const Str b);
+bool str_eq(Str a, Str b);
+Str str_concat(Str a, Str b);
+Str str_from_cstr(char * cstr);
+bool str_a_contains_b(Str a, Str b);
 
-const Str str_build_from_arraylist( const ArrayList *list );
+Str str_build_from_arraylist( ArrayList *list );
 
-const Str __attribute__((overloadable)) str_format(char * _Nonnull format, ...);
-const Str __attribute__((overloadable)) str_format(const Str format, ...);
+Str __attribute__((overloadable)) str_format(char * format, ...);
+Str __attribute__((overloadable)) str_format(Str format, ...);
 
-void str_register(const char * _Nonnull format, const Str (* _Nonnull printer)(va_list * _Nonnull args));
+void str_register(char * format, Str (* printer)(va_list * args));
 
 #endif
 #ifdef LIBS_IMPLEMENTATION
@@ -101,11 +100,11 @@ ArrayList arraylist_new(u32 elem_size) {
     return list;
 }
 
-void arraylist_free(ArrayList * _Nonnull list) {
+void arraylist_free(ArrayList * list) {
     free(list->data);
 }
 
-void arraylist_push(ArrayList * _Nonnull list, void * _Nonnull elem) {
+void arraylist_push(ArrayList * list, void * elem) {
     if (list->len == list->cap) {
         list->cap *= 2;
         list->data = realloc(list->data, list->cap * list->elem_size);
@@ -118,7 +117,7 @@ void arraylist_push(ArrayList * _Nonnull list, void * _Nonnull elem) {
     list->len++;
 }
 
-void arraylist_remove(ArrayList * _Nonnull list, u32 index) {
+void arraylist_remove(ArrayList * list, u32 index) {
     assert(index < list->len); // Index out of bounds.
     u32 offset = index * list->elem_size;
     for (u32 j = index; j < list->len; j++) {
@@ -134,14 +133,14 @@ void arraylist_remove(ArrayList * _Nonnull list, u32 index) {
 static u32 _num_options = 0;
 static FormatOption options[MAX_FORMAT_OPTIONS] = {0};
 
-void str_register(const char * _Nonnull format, const Str (* _Nonnull printer)(va_list * _Nonnull args)) {
+void str_register(char * format, Str (* printer)(va_list * args)) {
     assert(_num_options < MAX_FORMAT_OPTIONS); // Ensure that enough space has been allocated for the format options.
     options[_num_options].format = str_from_cstr(format);
     options[_num_options].printer = printer;
     _num_options++;
 }
 
-static const Str i32_Printer(va_list * _Nonnull args) {
+static Str i32_Printer(va_list * args) {
     i32 number = va_arg(*args, i32);
     u32 len = 0;
     i32 temp = number;
@@ -173,7 +172,7 @@ static const Str i32_Printer(va_list * _Nonnull args) {
     return (Str){str, len};
 }
 
-static const Str u32_Printer(va_list * _Nonnull args) {
+static Str u32_Printer(va_list * args) {
     u32 number = va_arg(*args, u32);
     if (number == 0) {
         char *str = malloc(2);
@@ -198,7 +197,7 @@ static const Str u32_Printer(va_list * _Nonnull args) {
     return (Str){str, len};
 }
 
-static const Str i64_Printer(va_list * _Nonnull args) {
+static Str i64_Printer(va_list * args) {
     i64 number = va_arg(*args, i64);
     u32 len = 0;
     i64 temp = number;
@@ -230,7 +229,7 @@ static const Str i64_Printer(va_list * _Nonnull args) {
     return (Str){str, len};
 }
 
-static const Str u64_Printer(va_list * _Nonnull args) {
+static Str u64_Printer(va_list * args) {
     u64 number = va_arg(*args, u64);
     if (number == 0) {
         char *str = malloc(2);
@@ -255,7 +254,7 @@ static const Str u64_Printer(va_list * _Nonnull args) {
     return (Str){str, len};
 }
 
-static const Str f32_Printer(va_list * _Nonnull args) {
+static Str f32_Printer(va_list * args) {
     f64 number = va_arg(*args, f64);
 
     i32 int_part = (i32)number;
@@ -340,7 +339,7 @@ static const Str f32_Printer(va_list * _Nonnull args) {
     return out;
 }
 
-static const Str f64_Printer(va_list * _Nonnull args) {
+static Str f64_Printer(va_list * args) {
     f64 number = va_arg(*args, f64);
 
     i64 int_part = (i64)number;
@@ -425,7 +424,7 @@ static const Str f64_Printer(va_list * _Nonnull args) {
     return out;
 }
 
-static const Str bool_Printer(va_list * _Nonnull args) {
+static Str bool_Printer(va_list * args) {
     bool i = va_arg(*args, bool);
     if (i) {
         return str_from_cstr("true");
@@ -434,7 +433,7 @@ static const Str bool_Printer(va_list * _Nonnull args) {
     }
 }
 
-static const Str str_Printer(va_list * _Nonnull args) {
+static Str str_Printer(va_list * args) {
     Str str = va_arg(*args, Str);
     return str;
 }
@@ -452,7 +451,7 @@ static void init_printers(void) __attribute__((constructor)) {
 }
 #endif
 
-static inline const Str str_format_impl(const Str format, va_list args ) {
+static inline Str str_format_impl(Str format, va_list args ) {
     ArrayList strs = arraylist_new(sizeof(Str));
     u32 last_printed = 0;
     // Scan through the format string and discover any registered format options.
@@ -489,7 +488,7 @@ static inline const Str str_format_impl(const Str format, va_list args ) {
                 for ( u32 k = 0; k < _num_options; k++ ) {
                     if ( str_eq( option, options[k].format ) ) {
                         const Str fmt = options[k].printer(&args);
-                        arraylist_push(&strs, &fmt);
+                        arraylist_push(&strs, (void*)&fmt);
                         i = j + 1;
                         found = true;
                         break;
@@ -513,7 +512,7 @@ static inline const Str str_format_impl(const Str format, va_list args ) {
     return out;
 }
 
-const Str __attribute__((overloadable)) str_format(char * _Nonnull format_c, ...) {
+Str __attribute__((overloadable)) str_format(char * format_c, ...) {
     va_list args;
     va_start(args, format_c);
     const Str format = str_from_cstr(format_c);
@@ -522,7 +521,7 @@ const Str __attribute__((overloadable)) str_format(char * _Nonnull format_c, ...
     return out;
 }
 
-const Str __attribute__((overloadable)) str_format(const Str format, ...) {
+Str __attribute__((overloadable)) str_format(Str format, ...) {
     va_list args;
     va_start(args, format);
     const Str out = str_format_impl(format, args);
@@ -530,7 +529,7 @@ const Str __attribute__((overloadable)) str_format(const Str format, ...) {
     return out;
 }
 
-void __attribute__((overloadable)) print(char * _Nonnull format_c, ...) {
+void __attribute__((overloadable)) print(char *format_c, ...) {
     va_list args;
     va_start(args, format_c);
     const Str string = str_format_impl(str_from_cstr(format_c), args);
@@ -539,7 +538,7 @@ void __attribute__((overloadable)) print(char * _Nonnull format_c, ...) {
     va_end(args);
 }
 
-void __attribute__((overloadable)) print(const Str format, ...) {
+void __attribute__((overloadable)) print(Str format, ...) {
     va_list args;
     va_start(args, format);
     const Str string = str_format_impl(format, args);
@@ -547,7 +546,7 @@ void __attribute__((overloadable)) print(const Str format, ...) {
     va_end(args);
 }
 
-const Str str_concat(const Str a, const Str b) {
+Str str_concat(Str a, Str b) {
     u32 len = a.len + b.len;
     char *str = malloc(len + 1);
     for (u32 i = 0; i < a.len; i++) {
@@ -561,7 +560,7 @@ const Str str_concat(const Str a, const Str b) {
     return c;
 }
 
-const Str str_from_cstr(const char * _Nonnull cstr) {
+Str str_from_cstr(char *cstr) {
     Str str = {cstr, 0};
     while (cstr[str.len] != '\0') {
         str.len++;
@@ -600,7 +599,7 @@ bool str_a_contains_b(Str a, Str b) {
     return 0;
 }
 
-const Str str_build_from_arraylist( const ArrayList * _Nonnull list ) {
+Str str_build_from_arraylist( ArrayList *list ) {
     u32 total_len = 0;
     forward_it(*list, Str) {
         total_len += it->len;

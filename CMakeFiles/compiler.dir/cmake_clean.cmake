@@ -19,8 +19,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/compiler.dir/src/visitor/visitor.c.o.d"
   "CMakeFiles/compiler.dir/src/x86.c.o"
   "CMakeFiles/compiler.dir/src/x86.c.o.d"
-  "bin/compiler"
-  "bin/compiler.pdb"
+  "compiler"
+  "compiler.pdb"
 )
 
 # Per-language clean rules from dependency scanning.
