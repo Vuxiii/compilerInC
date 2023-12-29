@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../ds/string.h"
 #include "token.h"
 #include "../context.h"
 #include "../x86.h"
@@ -21,7 +20,7 @@ void next_token( struct Context *context );
  *  This function returns a string as represented
  *  by [left, right[
  */
-struct String *get_string_from( char *left, char *right );
+Str get_string_from( char *left, char *right );
 
 /**
  * Return the current Token

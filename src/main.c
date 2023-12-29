@@ -5,7 +5,8 @@
 #include "visitor/symbols.h"
 #include "visitor/visitor.h"
 #include "types.h"
-
+#define LIBS_IMPLEMENTATION
+#include "include/library.h"
 #include <stdatomic.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -51,7 +52,7 @@ int main( int argc, char **argv ) {
         .current_line = 1,
         .current_position = input,
         .file_start = input,
-        .filename = &String( .str = filename, .length = strlen(filename) ),
+        .filename = str_from_cstr(filename),
         .instruction_index = 0,
         .instruction_size = sizeof(struct ASM_Instruction) * 1024,
         .ASM_INSTRUCTION_BUFFER = malloc(sizeof(struct ASM_Instruction) * 1024)
@@ -77,11 +78,11 @@ int main( int argc, char **argv ) {
     for (uint64_t i = 0; i < symbol_visitor.contents.symbol_visitor.function_count; ++i) {
         // Each function
         struct Symbol_Table *table = symbol_visitor.contents.symbol_visitor.functions[i];
-        printf("Function [%s]\n", table->fn->function_name->str);
+        printf("Function [%s]\n", table->fn->function_name);
         printf("\tCount [%d]\n", table->symbol_table.count);
          for (uint64_t j = 0; j < table->symbol_table.size; ++j) {
-             if (table->symbol_table.items[j].key != NULL)
-                printf("\tSymbol [%s]\n", table->symbol_table.items[j].key->str);
+             if (table->symbol_table.items[j].key.str != NULL)
+                printf("\tSymbol [%s]\n", table->symbol_table.items[j].key.str);
          }
     }
 

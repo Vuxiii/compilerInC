@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "../include/library.h"
 
 void next_token( struct Context *context ) {
     context->current_token_index = context->peek_token_index;
@@ -470,28 +470,19 @@ void print_tokens(struct Context *context) {
         next_token(context);
     }
 }
-struct String *get_string_from( char *left, char *right) {
-    // [1] Compute the hash for the string
-    // [2] Check if the string has already been made
-    // [3] If yes - Return that String
-    // [4] If no  - Make a new String and return that.
-    
-    // stupid for now
-    unsigned int len = right - left;
-    char *p = malloc( sizeof(char) * len + sizeof(struct String) );
-    char *cpy = sizeof(struct String) + p;
-    while (left != right)
-        *cpy++ = *left++;
-    
-    struct String *str = (struct String *)p;
-    str->str = sizeof(struct String) + p;
-    str->length = len;
-    return str;
+
+Str get_string_from( char *left, char *right) {
+    u32 len = right - left;
+    char *str = malloc(len + 1);
+    for (u32 i = 0; i < len; ++i) {
+        str[i] = left[i];
+    }
+    return (Str) {.str = str, .len = len};
 }
 
 int is_valid_identifier_char(char c) {
-    if (c == '_') return 1;
-    if (c >= '0' && c <= '9') return 1;
+    if (c == '_') return true;
+    if (c >= '0' && c <= '9') return true;
     // Trick to remove the 6th bit
     // We now only have  to compare twice in the range [65, 90]
     c &= 223;

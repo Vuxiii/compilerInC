@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../ds/string.h"
+#include "../include/library.h"
+
 enum TOKEN {
     TOKEN_EOP        = -1,
     TOKEN_LET        =  0,
@@ -66,21 +67,21 @@ enum TOKEN {
     NODE_SCOPE,
 };
 
-enum PRIMITIVE_TYPE {
-    i8  = 0,
-    i16 = 1,
-    i32 = 2,
-    i64 = 3,
-
-    u8  = 4,
-    u16 = 5,
-    u32 = 6,
-    u64 = 7,
-
-    f32 = 8,
-    f64 = 9,
-    string = 10,
-};
+//enum PRIMITIVE_TYPE {
+//    i8  = 0,
+//    i16 = 1,
+//    i32 = 2,
+//    i64 = 3,
+//
+//    u8  = 4,
+//    u16 = 5,
+//    u32 = 6,
+//    u64 = 7,
+//
+//    f32 = 8,
+//    f64 = 9,
+//    string = 10,
+//};
 
 struct Token {
     enum TOKEN token_type;
@@ -88,7 +89,7 @@ struct Token {
     union {
         long long     inum; // 64 bit
         double        fnum; // 64 bit
-        struct String*str;  // 64 bit
+        Str str;            // 128 bit
         struct Node  *node; // 64 bit
     } data;
 
@@ -98,7 +99,7 @@ struct Token {
 };
 
 struct Declaration_Function {
-    struct String *function_name;
+    Str function_name;
     struct Node *parameters; // NULL if no parameters
     struct Node *body;
 };
@@ -106,14 +107,14 @@ struct Declaration_Function {
 struct Declaration_Variable {
     // What physical type does the variable contain
     // i8, u8, i16, u16, f8, f16 ...
-    enum PRIMITIVE_TYPE literal_type;
-    struct String *variable_name;
-    struct String *variable_type;
+//    enum PRIMITIVE_TYPE literal_type;
+    Str variable_name;
+    Str variable_type;
 };
 
 struct Declaration_Array {
-    struct String *array_name;
-    struct String *array_type;
+    Str array_name;
+    Str array_type;
     long long length;
 };
 
@@ -122,7 +123,7 @@ struct Declaration_Type {
 };
 
 struct Declaration_Struct {
-    struct String *struct_name;
+    Str struct_name;
     struct Node *fields;
     long long count; // If not set: -1
 };
@@ -135,7 +136,7 @@ struct For_Loop {
 };
 struct Each_Loop {
     struct Node   *container;
-    struct String *iterator_symbol;
+    Str iterator_symbol;
     struct Node   *body;
 };
 
@@ -169,7 +170,7 @@ struct Number_F {
 };
 
 struct Symbol {
-    struct String *str;
+    Str str;
 };
 
 struct Expression {
@@ -177,7 +178,7 @@ struct Expression {
 };
 
 struct Array_Access {
-    struct String *lhs;
+    Str lhs;
     struct Node *index;
 };
 

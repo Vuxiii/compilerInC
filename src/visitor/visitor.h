@@ -1,10 +1,9 @@
 #pragma once
-#include <stdint.h>
 #include "../context.h"
 #include "../frontend/token.h"
-#include "../ds/string.h"
 #include "../defines.h"
 #include "../ds/hashtable.h"
+#include "../include/library.h"
 
 enum Visitor_Kind {
     SYMBOL_VISITOR
@@ -20,8 +19,8 @@ enum Visitor_State {
 struct Symbol_Visitor {
     struct Context *context;
 
-    uint64_t function_count;
-    uint64_t function_size;
+    u32 function_count;
+    u32 function_size;
 
     ARRAY(struct Symbol_Table *) functions;
 };

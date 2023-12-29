@@ -1,7 +1,7 @@
 #include "parser.h"
 #include "lexer.h"
 #include "../error.h"
-#include "../ds/string.h"
+#include "../include/library.h"
 #include "token.h"
 #include <stdlib.h>
 #include <unistd.h>
@@ -47,9 +47,7 @@ struct Node *parse_toplevel_statement( struct Context *context ) {
         } break;
         default: {
             emit_error(context, 
-                        .error_string = String( 
-                            .str = "Unexpected top level Token.\n",
-                            .length = 28),
+                        .error_string = str_from_cstr("Unexpected top level Token.\n"),
                     .token = current_token(context) );
             return NULL;
         } break;
@@ -62,26 +60,20 @@ struct Node *parse_function_declaration( struct Context *context ) {
 
     next_token(context);
     assert_token_type(context, .expected_token = TOKEN_IDENTIFIER, .which = CURRENT,
-                             .error_string = String(
-                              .str = "Unexpected Token. Expected Function Name\n", 
-                              .length = 40));
+                             .error_string = str_from_cstr("Unexpected Token. Expected Function Name\n"));
   
     // Current: TOKEN_IDENTIFIER
-    struct String *func_name = current_token(context)->data.str;
+    Str func_name = current_token(context)->data.str;
 
     next_token(context);
     // Current: TOKEN_LPAREN
     assert_token_type(context, .expected_token = TOKEN_LPAREN, .which = CURRENT,
-                             .error_string = String( 
-                                 .str = "Unexpected Token while parsing function declaration. Expected '('\n",
-                                 .length = 66));
-    
+                             .error_string = str_from_cstr("Unexpected Token while parsing function declaration. Expected '('\n"));
+
     struct Node *parameters = parse_parameter_list(context);
 
     assert_token_type(context, .expected_token = TOKEN_RPAREN, .which = CURRENT,
-                             .error_string = String( 
-                                 .str = "Unexpected Token while parsing function declaration. Expected ')'\n",
-                                 .length = 66));
+                             .error_string = str_from_cstr("Unexpected Token while parsing function declaration. Expected ')'\n"));
 
     // At this stage check for implicit void return type or a given type.
 
@@ -145,9 +137,7 @@ struct Node *parse_statement( struct Context *context ) {
             // [2]
             next_token(context);
             some_statement = parse_declaration(context);
-            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_SEMICOLON, .error_string = String( 
-                .str = "Unexpected Token at the end of a 'let' statement. Missing ';'\n", 
-                .length = 62 ));
+            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_SEMICOLON, .error_string = str_from_cstr("Unexpected Token at the end of a 'let' statement. Missing ';'\n"));
             next_token(context);
         } break;
         case TOKEN_IDENTIFIER: {
@@ -166,9 +156,7 @@ struct Node *parse_statement( struct Context *context ) {
                     struct Node *assignment = get_empty_node();
                     struct Node *expression = parse_expression(context);
                     
-                    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_SEMICOLON, .error_string = String( 
-                        .str = "Unexpected Token at the end of an assignment. Expected ';'\n",
-                        .length = 59 ));
+                    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_SEMICOLON, .error_string = str_from_cstr("Unexpected Token at the end of an assignment. Expected ';'\n"));
                     next_token(context);
                     // Current: TOKEN_SEMICOLON
 
@@ -193,9 +181,8 @@ struct Node *parse_statement( struct Context *context ) {
 
                     struct Node *arguments = parse_argument_list(context);
 
-                    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_RPAREN, .error_string = String(
-                        .str = "Unexpected Token while parsing a function call. Expected ')'\n",
-                        .length = 61));
+                    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_RPAREN, .error_string = str_from_cstr("Unexpected Token while parsing a function call. Expected ')'\n"));
+
                     
                     next_token(context);
                     // Current: TOKEN_RPAREN
@@ -203,9 +190,7 @@ struct Node *parse_statement( struct Context *context ) {
                     // TODO: Future Proof
                     // At this point it might actually return a reference to another object. So we could also see a TOKEN_DOT here
 
-                    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_SEMICOLON, .error_string = String(
-                        .str = "Unexpected Token while parsing a function call. Expected ';'\n",
-                        .length = 61));
+                    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_SEMICOLON, .error_string = str_from_cstr("Unexpected Token while parsing a function call. Expected ';'\n"));
                     next_token(context);
                     // Current: TOKEN_SEMICOLON
 
@@ -221,9 +206,7 @@ struct Node *parse_statement( struct Context *context ) {
                     some_statement = function_call;
                 } break;
                 default: {
-                    emit_error(context, .token = peek_token(context), .error_string = String(
-                        .str = "Unexpected Token at the end of a statement.\n Expected either a ';' to indicate the end of the statement,\n              or a '=' to declare an assignment\n",
-                        .length = 153 ) );
+                    emit_error(context, .token = peek_token(context), .error_string = str_from_cstr("Unexpected Token at the end of a statement.\n Expected either a ';' to indicate the end of the statement,\n              or a '=' to declare an assignment\n"));
                 } break;
             }
 
@@ -234,9 +217,7 @@ struct Node *parse_statement( struct Context *context ) {
             struct Token for_token = *current_token(context);
             struct Node *for_node = get_empty_node();
 
-            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_LPAREN, .error_string = String( 
-                .str = "Unexpected Token while trying to parse a for loop. Expected '('\n",
-                .length = 64)); 
+            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_LPAREN, .error_string = str_from_cstr("Unexpected Token while trying to parse a for loop. Expected '('\n"));
             next_token(context);
             
             struct Node *init = NULL;
@@ -245,15 +226,11 @@ struct Node *parse_statement( struct Context *context ) {
                 init = parse_statement(context);
             }
             
-            assert_token_type(context, .which = CURRENT, .expected_token = TOKEN_SEMICOLON, .error_string = String(
-                .str = "Unexpected Token while trying to parse a for loop. Expected ';' before the guard\n",
-                .length = 81));
+            assert_token_type(context, .which = CURRENT, .expected_token = TOKEN_SEMICOLON, .error_string = str_from_cstr("Unexpected Token while trying to parse a for loop. Expected ';' before the guard\n"));
 
             struct Node *guard = parse_expression(context);
 
-            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_SEMICOLON, .error_string = String(
-                .str = "Unexpected Token while trying to parse a for loop. Expected ';' after the guard\n",
-                .length = 80));
+            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_SEMICOLON, .error_string = str_from_cstr("Unexpected Token while trying to parse a for loop. Expected ';' after the guard\n"));
             next_token(context);
 
             struct Node *advance = NULL;
@@ -261,9 +238,7 @@ struct Node *parse_statement( struct Context *context ) {
                 advance = parse_statement(context);
             }
 
-            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_RPAREN, .error_string = String(
-                .str = "Unexpected Token while trying to parse a for loop. Expected a closing ')'\n",
-                .length = 74 ));
+            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_RPAREN, .error_string = str_from_cstr("Unexpected Token while trying to parse a for loop. Expected a closing ')'\n"));
             next_token(context);
 
             struct Node *body = parse_statement(context); 
@@ -289,9 +264,7 @@ struct Node *parse_statement( struct Context *context ) {
             while_node->left = current_token(context)->left;
             while_node->line = current_token(context)->line;
             
-            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_LPAREN, .error_string = String( 
-                .str = "Unexpected Token while trying to parse a while loop. Missing '('\n", 
-                .length = 65));
+            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_LPAREN, .error_string = str_from_cstr("Unexpected Token while trying to parse a while loop. Missing '('\n"));
 
             struct Node *guard = parse_expression(context);
             struct Node *body = parse_statement(context);
@@ -313,20 +286,14 @@ struct Node *parse_statement( struct Context *context ) {
             each_node->left = current_token(context)->left;
             each_node->line = current_token(context)->line;
 
-            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_LPAREN, .error_string = String(
-                .str = "Unexpected Token while trying to parse an Each loop. Expected '('\n",
-                .length = 66 ));
+            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_LPAREN, .error_string = str_from_cstr("Unexpected Token while trying to parse an Each loop. Expected '('\n"));
             next_token(context);
 
-            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_IDENTIFIER, .error_string = String(
-                .str = "Unexpected Token while trying to parse an Each loop. Expected an identifier for the iterator symbol\n",
-                .length = 100 ));
+            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_IDENTIFIER, .error_string = str_from_cstr("Unexpected Token while trying to parse an Each loop. Expected an identifier for the iterator symbol\n"));
             next_token(context);
-            struct String *symbol = current_token(context)->data.str;
+            Str symbol = current_token(context)->data.str;
 
-            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_COLON, .error_string = String(
-                .str = "Unexpected Token while trying to parse an Each loop. Expected ':'\n",
-                .length = 66 ));
+            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_COLON, .error_string = str_from_cstr("Unexpected Token while trying to parse an Each loop. Expected ':'\n"));
 
             next_token(context);
             // Current: TOKEN_COLON
@@ -335,9 +302,7 @@ struct Node *parse_statement( struct Context *context ) {
 
             struct Node *container = parse_symbol(context);
 
-            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_RPAREN, .error_string = String(
-                .str = "Unexpected Token while trying to parse an Each loop. Expected closing ')'\n",
-                .length = 74 )); 
+            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_RPAREN, .error_string = str_from_cstr("Unexpected Token while trying to parse an Each loop. Expected closing ')'\n"));
 
             next_token(context);
 
@@ -365,12 +330,10 @@ struct Node *parse_symbol( struct Context *context ) {
     // [3] IDENTIFIER [ expression ]
     // [4] IDENTIFIER [ expression ] . parse_symbol
     
-    assert_token_type(context, .which = CURRENT, .expected_token = TOKEN_IDENTIFIER, .error_string = String(
-        .str = "Unexpected Token while trying to parse a symbol expression. Expected an identifier\n",
-        .length = 83 ));
+    assert_token_type(context, .which = CURRENT, .expected_token = TOKEN_IDENTIFIER, .error_string = str_from_cstr("Unexpected Token while trying to parse a symbol expression. Expected an identifier\n"));
 
     // Current: IDENTIFIER
-    struct String *lhs_identifier = current_token(context)->data.str;
+    Str lhs_identifier = current_token(context)->data.str;
     if (peek_token(context)->token_type != TOKEN_DOT &&
         peek_token(context)->token_type != TOKEN_LBRACKET) {
         
@@ -407,10 +370,8 @@ struct Node *parse_symbol( struct Context *context ) {
             .index = expression
         };
 
-        assert_token_type(context, .which = PEEK, .expected_token = TOKEN_RBRACKET, .error_string = String(
-                                    .str = "Unexpected Token. Expected ']'\n",
-                                    .length = 31 ));
-        
+        assert_token_type(context, .which = PEEK, .expected_token = TOKEN_RBRACKET, .error_string = str_from_cstr("Unexpected Token. Expected ']'\n"));
+
         next_token(context);
         // Current: ']'
         
@@ -435,9 +396,7 @@ struct Node *parse_symbol( struct Context *context ) {
 
     }
 
-    emit_error(context, .token = peek_token(context), .error_string = String(
-                .str = "Unexpected Token. Expected one of [ '.' , '[' ]\n",
-                .length = 48));
+    emit_error(context, .token = peek_token(context), .error_string = str_from_cstr("Unexpected Token. Expected one of [ '.' , '[' ]\n"));
 
     // We never reach here.
     return NULL;
@@ -456,9 +415,7 @@ struct Node *parse_declaration( struct Context *context ) {
     next_token(context);
 
     assert_token_type(context, .which = CURRENT, .expected_token = TOKEN_IDENTIFIER,
-                             .error_string = String( 
-                                 .str = "Unexpected Token while trying to parse a let declaration. Expected an Identifier\n",
-                                 .length = 81));
+                             .error_string = str_from_cstr("Unexpected Token while trying to parse a let declaration. Expected an Identifier\n"));
     // Current: TOKEN_IDENTIFIER
     
     struct Token lhs_identifier = *current_token(context);
@@ -471,7 +428,7 @@ struct Node *parse_declaration( struct Context *context ) {
             switch (current_token(context)->token_type) {
                 case TOKEN_IDENTIFIER: {
                     // Current: TOKEN_IDENTIFIER
-                    struct String *type = current_token(context)->data.str;
+                    Str type = current_token(context)->data.str;
 
                     switch (peek_token(context)->token_type) {
                         case TOKEN_EQ: {
@@ -532,23 +489,17 @@ struct Node *parse_declaration( struct Context *context ) {
                 case TOKEN_LBRACKET: {
                     // [3] LET IDENTIFIER : [ NUMBER ] IDENTIFIER
                     // Current: TOKEN_LBRACKET
-                    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_NUMBER_D, .error_string = String( 
-                                .str = "Unexpected Token while parsing a let array declaration. The length of the array MUST be literal number.\n", 
-                                .length = 104 ));
+                    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_NUMBER_D, .error_string = str_from_cstr("Unexpected Token while parsing a let array declaration. The length of the array MUST be literal number.\n"));
                     next_token(context);
                     // Current: TOKEN_NUMBER_D
 
                     struct Token length = *current_token(context);
                     
-                    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_RBRACKET, .error_string = String(
-                                .str = "Unexpected Token while parsing a let array declaration. Expected a ']'\n",
-                                .length = 71));
+                    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_RBRACKET, .error_string = str_from_cstr("Unexpected Token while parsing a let array declaration. Expected a ']'\n"));
                     next_token(context);
                     // Current: TOKEN_RBRACKET
 
-                    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_IDENTIFIER, .error_string = String(
-                                .str = "Unexpected Token while parsing a let array declaration. Expected a Type\n",
-                                .length = 72 ));
+                    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_IDENTIFIER, .error_string = str_from_cstr("Unexpected Token while parsing a let array declaration. Expected a Type\n"));
                     next_token(context);
                     // Current: TOKEN_IDENTIFIER
 
@@ -567,9 +518,7 @@ struct Node *parse_declaration( struct Context *context ) {
                     return array_decl;
                 } break;
                 default: {
-                    emit_error(context, .token = current_token(context), .error_string = String(
-                                .str = "Unexpected Token while parsing a let declaration. Expected either an Identifier or '['\n",
-                                .length = 87 ) );
+                    emit_error(context, .token = current_token(context), .error_string = str_from_cstr("Unexpected Token while parsing a let declaration. Expected either an Identifier or '['\n"));
                 } break;
             }
         } break;
@@ -585,9 +534,7 @@ struct Node *parse_declaration( struct Context *context ) {
                 case TOKEN_STRUCT: { 
                     // [5] LET IDENTIFIER :: STRUCT { parameter_list }
                     assert_token_type(context, .which = PEEK, .expected_token = TOKEN_LCURLY, 
-                            .error_string = String(
-                                .str = "Unexpected Token while trying to parse a struct declaration. Expected '{'\n",
-                                .length = 74 ));
+                            .error_string = str_from_cstr("Unexpected Token while trying to parse a struct declaration. Expected '{'\n"));
                     next_token(context);
 
                     struct Node *struct_declaration = get_empty_node();
@@ -595,9 +542,7 @@ struct Node *parse_declaration( struct Context *context ) {
                     struct Node *parameter_list = parse_parameter_list(context);
 
                     assert_token_type(context, .which = CURRENT, .expected_token = TOKEN_RCURLY,
-                            .error_string = String(
-                                .str = "Unexpected Token while trying to parse a struct declaration. Expected '}'\n",
-                                .length = 74 ));
+                            .error_string = str_from_cstr("Unexpected Token while trying to parse a struct declaration. Expected '}'\n"));
 
                     struct_declaration->contents.struct_declaration = (struct Declaration_Struct) {
                         .struct_name = lhs_identifier.data.str,
@@ -612,9 +557,7 @@ struct Node *parse_declaration( struct Context *context ) {
                     return struct_declaration;
                 }
                 default: {
-                    emit_error(context, .token = current_token(context), .error_string = String(
-                                .str = "Unexpected Token. Expected either an Identifier' or 'struct'\n",
-                                .length = 61 ));
+                    emit_error(context, .token = current_token(context), .error_string = str_from_cstr("Unexpected Token. Expected either an Identifier' or 'struct'\n"));
                 }
 
              }
@@ -622,9 +565,7 @@ struct Node *parse_declaration( struct Context *context ) {
         } break;
         default: {
             emit_error(context, .token = current_token(context),
-                            .error_string = String(
-                                .str = "Unexpected Token in a let declaration. Expected either a ':' to declare a variable, or a '::' to declare a type\n",
-                                .length = 112));
+                            .error_string = str_from_cstr("Unexpected Token in a let declaration. Expected either a ':' to declare a variable, or a '::' to declare a type\n"));
         } break;
     }
 
@@ -697,15 +638,11 @@ struct Node *parse_parameter( struct Context *context ) {
     
     struct Token lhs = *current_token(context);
 
-    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_COLON, .error_string = String(
-                .str = "Unexpected Token trying to parse a Parameter. Expected a ':'\n",
-                .length = 61 ));
-    next_token(context); 
+    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_COLON, .error_string = str_from_cstr("Unexpected Token trying to parse a Parameter. Expected a ':'\n"));
+    next_token(context);
 
-    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_IDENTIFIER, .error_string = String(
-                .str = "Unexpected Token tyring to parse a Parameter. Expected a type\n",
-                .length = 62 ));
-    
+    assert_token_type(context, .which = PEEK, .expected_token = TOKEN_IDENTIFIER, .error_string = str_from_cstr("Unexpected Token tyring to parse a Parameter. Expected a type\n"));
+
     next_token(context);
     
     struct Token rhs = *current_token(context);
@@ -873,9 +810,7 @@ struct Node *parse_token( struct Context *context ) {
             next_token(context);
             struct Node *expr = parse_expression(context);
 
-            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_RPAREN, .error_string = String(
-                        .str = "Unexpected Token while parsing expression. Expected closing ')'\n",
-                        .length = 64 ));
+            assert_token_type(context, .which = PEEK, .expected_token = TOKEN_RPAREN, .error_string = str_from_cstr("Unexpected Token while parsing expression. Expected closing ')'\n"));
             next_token(context);
             return expr;
         } break;
@@ -932,9 +867,7 @@ struct Node *parse_token( struct Context *context ) {
 
                 struct Node *arguments = parse_argument_list(context);
 
-                assert_token_type(context, .which = PEEK, .expected_token = TOKEN_RPAREN, .error_string = String(
-                    .str = "Unexpected Token while trying to parse a function call. Expected ')'\n",
-                    .length = 69 ));
+                assert_token_type(context, .which = PEEK, .expected_token = TOKEN_RPAREN, .error_string = str_from_cstr("Unexpected Token while trying to parse a function call. Expected ')'\n"));
                 next_token(context);
 
                 function_call->contents.function_call = (struct Function_Call) {
@@ -1015,9 +948,7 @@ struct Node *parse_token( struct Context *context ) {
         } break;
 
         default: {
-            emit_error(context, .token = peek_token(context), .error_string = String(
-                        .str = "Unexpected Token in expression.\n",
-                        .length = 32 ));
+            emit_error(context, .token = peek_token(context), .error_string = str_from_cstr("Unexpected Token in expression.\n"));
         }
     }
 
@@ -1030,7 +961,7 @@ struct Node *get_empty_node(void) {
 
         NODE_BUFFER = realloc(NODE_BUFFER, sizeof(struct Node) * NODE_BUFFER_SIZE * 2);
         if (NODE_BUFFER == NULL) {
-            print_string(String( .str = "Out of memory\n", .length = 14));
+            print(str_from_cstr("Out of memory\n"));
             _Exit(2);
         }
         NODE_BUFFER_SIZE *= 2;

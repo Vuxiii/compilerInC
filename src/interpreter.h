@@ -1,14 +1,15 @@
 #pragma once
 #include "frontend/token.h"
 #include "frontend/lexer.h"
-#include <stdint.h>
-struct Runtime {
-    int64_t *heap;
-    int64_t heap_size;
-    int64_t *heap_ptr;
+#include "include/library.h"
 
-    int64_t *stack;
-    int64_t  stack_size;
+struct Runtime {
+    i64 *heap;
+    i64 heap_size;
+    i64 *heap_ptr;
+
+    i64 *stack;
+    i64  stack_size;
     
     
     /*
@@ -29,7 +30,7 @@ struct Runtime {
         [e] = r14
         [f] = r15
     */
-    int64_t registers[16];
+    i64 registers[16];
 };
 
 void interpret( struct Runtime *runtime, struct Context *context );

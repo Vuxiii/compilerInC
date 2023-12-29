@@ -1,14 +1,14 @@
 #pragma once
 
 #include "frontend/lexer.h"
-#include "ds/string.h"
+#include "include/library.h"
 
 struct Allocation_Error_Params {
-    struct String error_message;
+    Str error_message;
 };
 
 struct Error_Params {
-    struct String error_string;
+    Str error_string;
     struct Token *token;
     struct Node *node;
 };
@@ -19,7 +19,7 @@ enum CURRENT_OR_PEEK {
 };
 
 struct Assert_Token_Type {
-    struct String error_string;
+    Str error_string;
     enum TOKEN expected_token;
     enum CURRENT_OR_PEEK which;
 };

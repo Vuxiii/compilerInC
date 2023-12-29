@@ -3,7 +3,6 @@
 #include "symbols.h"
 #include "../frontend/token.h"
 #include "visitor.h"
-#include "../ir.h"
 #include "../error.h"
 #include "../ds/hashtable.h"
 #include "../types.h"
@@ -26,38 +25,29 @@ void collect_symbols(struct Visitor *_visitor, struct Node *root) {
         case NODE_STRUCT_DECLARATION: {
             // Here we want to ensure correct offset placement for each individual field in the struct.
 
-            print_string(String(.str = "Found a struct\n", .length = 15));
+            print("Found a struct\n");
             struct Declaration_Struct struct_declaration = root->contents.struct_declaration;
-            print_string( *struct_declaration.struct_name );
+            print( struct_declaration.struct_name );
             struct Node *current = struct_declaration.fields;
             struct_declaration.count = 0;
             while (current != NULL) {
                 if (current->node_type == NODE_PARAMETER_LIST) {
                     struct Parameter_List *list = (struct Parameter_List *) &current->contents.parameter_list;
-                    print_string(String(.str = "\n      .", .length = 8));
-                    print_string( *list->parameter->contents.variable_declaration.variable_name );
-                    print_string(String(.str = ": ", .length = 2));
-                    print_string(*list->parameter->contents.variable_declaration.variable_type);
+                    print("\n      .{str}:{str}", list->parameter->contents.variable_declaration.variable_name, list->parameter->contents.variable_declaration.variable_type);
                     current = list->next;
                 } else if (current->node_type == NODE_VARIABLE_DECLARATION) {
-                    print_string(String(.str = "\n      .", .length = 8));
-                    print_string( *current->contents.variable_declaration.variable_name );
-                    print_string(String(.str = ": ", .length = 2));
-                    print_string(*current->contents.variable_declaration.variable_type);
+                    print("\n      .{str}:{str}", current->contents.variable_declaration.variable_name, current->contents.variable_declaration.variable_type);
 
                     current = NULL;
                 }
                 struct_declaration.count++;
             }
-            print_string(String(.str = "\nFields: ", .length = 9));
-            print_int(struct_declaration.count);
-            print_string(String(.str = "\n", .length = 1));
-
-            insert_type(visitor->context, (struct User_Type){
-               .field_count = struct_declaration.count,
-               .fields = fields,
-               .
-            });
+            print("\nFields: {u32}\n", struct_declaration.count);
+//            insert_type(visitor->context, (struct User_Type){
+//               .field_count = struct_declaration.count,
+//               .fields = fields,
+//               .
+//            });
 
         } break;
         case NODE_PARAMETER_LIST: {
@@ -72,10 +62,7 @@ void collect_symbols(struct Visitor *_visitor, struct Node *root) {
             if ( ht_contains(&table->symbol_table, decl->variable_name) == 1 ) {
                 // It was already inserted
                 // This is an error for now. We can maybe do some shadowing later on if that is cool.
-                emit_error( visitor->context, .error_string = String(
-                        .str = "Tried to redeclare a symbol\n",
-                        .length = 28
-                        ), .node = root);
+                emit_error( visitor->context, .error_string = str_from_cstr("Tried to redeclare a symbol\n"), .node = root);
                 return;
             }
 
@@ -96,7 +83,7 @@ void insert_function( struct Symbol_Visitor *visitor, struct Declaration_Functio
         visitor->functions = realloc( visitor->functions, visitor->function_size * 2 * sizeof(struct SymbolTable *) );
 
         if (visitor->functions == NULL) {
-            emit_allocation_error(String( .str = "Symbol Table", .length = 12 ));
+            emit_allocation_error(str_from_cstr("Symbol Table"));
         }
         visitor->function_size = visitor->function_size * 2;
     }
@@ -111,9 +98,9 @@ struct Symbol_Table *current_symbol_table( struct Symbol_Visitor *visitor ) {
     return visitor->functions[visitor->function_count-1];
 }
 
-struct Symbol_Table *get_symbol_table( struct Symbol_Visitor *visitor, struct String *function_name ) {
+struct Symbol_Table *get_symbol_table( struct Symbol_Visitor *visitor, Str function_name ) {
     for (uint64_t i = 0; i < visitor->function_count; ++i) {
-        if ( cmp_strings( visitor->functions[i]->fn->function_name, function_name ) != 0 ) {
+        if ( str_eq( visitor->functions[i]->fn->function_name, function_name ) != 0 ) {
             return visitor->functions[i];
         }
     }

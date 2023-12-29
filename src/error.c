@@ -1,40 +1,30 @@
 #include "error.h"
-#include "ds/string.h"
-#include <stdio.h>
+#include "include/library.h"
 #include <stdlib.h>
 #include <unistd.h>
 
 void emit_allocation_error_( struct Allocation_Error_Params error ) {
-    print_string( String( .str = "Unable to allocate memory for [", .length = 31 ) );
-    print_string( error.error_message );
-    print_string( String( .str = "] Exiting...\n", .length = 13 ) );
+    print("Unable to allocate memory for [{str}] Exiting...\n", error.error_message );
     _Exit(-1);
 }
 
 void emit_error_( struct Context *context, struct Error_Params error ) {
-    print_string(*context->filename);
-    print_string(String(.str = ":", .length = 1));
-    if (error.token)
-        print_int((int)error.token->line);
-    else if (error.node)
-        print_int((int)error.node->line);
-        
-    print_string(String(.str = ": error: ", .length = 9));
-    // if (error.error_string)
-        print_string(error.error_string);
-    print_string(String(.str = "\n", .length = 1));
+    u32 lineno = error.token ? error.token->line : error.node->line;
+
+    print("{str}:{u32}: Error: {str}\n", context->filename, lineno, error.error_string);
+
     if (error.token) {
-        print_string(String(.str = "Actual: ", .length = 8));
-        print_string(String(.str = context->file_start + error.token->left, 
-                            .length = error.token->right - error.token->left));
+        print("Actual: {str}\n", (Str){
+            context->file_start + error.token->left,
+            error.token->right - error.token->left
+        });
     }
     if (error.node) {
-        print_string(String(.str = "Line >> ", .length = 8));
-        print_string(String(.str = context->file_start + error.node->left, 
-                            .length = error.node->right - error.node->left));
-
+        print("Line >> {str}\n", (Str){
+            context->file_start + error.node->left,
+            error.node->right - error.node->left
+        });
     }
-    print_string( String( .str = "\n", .length = 1 ) );
     _Exit(-1);
 }
 
