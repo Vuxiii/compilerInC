@@ -16,21 +16,21 @@ uint32_t insert_type( struct Context *context, struct User_Type user_type ) {
     return context->type_count++;
 }
 
-struct Result_User_Type get_type(struct Context *context, u32 descriptor ) {
+struct Result_User_Type get_type( struct Context *context, u32 descriptor ) {
     if (descriptor > context->type_count) {
-        return Result_User_Type(.result = STATE_FAIL );
+        return Result_User_Type( .result = STATE_FAIL );
     }
     return Result_User_Type (.result = STATE_OK, .value = &context->user_types[descriptor] );
 }
 
-struct Result_uint32 get_field_number(struct Context *context, u32 descriptor, Str field) {
+struct Result_uint32 get_field_number( struct Context *context, u32 descriptor, Str field ) {
     MATCH( type.result, struct Result_User_Type type = get_type(context, descriptor )) {
         case STATE_FAIL: {
             return Result_uint32(.result = STATE_FAIL );
         } break;
         case STATE_OK: {
             for ( u32 i = 0; i < type.value->field_count; ++i ) {
-                if (str_eq(field, type.value->fields[i])) {
+                if (str_eq(field, type.value->fields[i].name)) {
                     return Result_uint32(.result = STATE_OK, .value = i );
                 }
             }

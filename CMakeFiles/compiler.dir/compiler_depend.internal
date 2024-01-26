@@ -829,6 +829,7 @@ CMakeFiles/compiler.dir/src/main.c.o
  /Users/not_archbtw/dev/c/compilerInC/src/frontend/token.h
  /Users/not_archbtw/dev/c/compilerInC/src/include/library.h
  /Users/not_archbtw/dev/c/compilerInC/src/visitor/symbols.h
+ /Users/not_archbtw/dev/c/compilerInC/src/visitor/typechecker.h
  /Users/not_archbtw/dev/c/compilerInC/src/visitor/visitor.h
  /Users/not_archbtw/dev/c/compilerInC/src/x86.h
 
@@ -1104,6 +1105,10 @@ CMakeFiles/compiler.dir/src/visitor/symbols.c.o
  /Users/not_archbtw/dev/c/compilerInC/src/types.h
  /Users/not_archbtw/dev/c/compilerInC/src/visitor/symbols.h
  /Users/not_archbtw/dev/c/compilerInC/src/visitor/visitor.h
+
+CMakeFiles/compiler.dir/src/visitor/typechecker.c.o
+ /Users/not_archbtw/dev/c/compilerInC/src/visitor/typechecker.c
+ /Users/not_archbtw/dev/c/compilerInC/src/visitor/typechecker.h
 
 CMakeFiles/compiler.dir/src/visitor/visitor.c.o
  /Users/not_archbtw/dev/c/compilerInC/src/visitor/visitor.c

@@ -6,6 +6,7 @@
 #include "../error.h"
 #include "../ds/hashtable.h"
 #include "../types.h"
+#include "../include/library.h"
 
 void collect_symbols(struct Visitor *_visitor, struct Node *root) {
     if (root == NULL) return;
@@ -27,27 +28,45 @@ void collect_symbols(struct Visitor *_visitor, struct Node *root) {
 
             print("Found a struct\n");
             struct Declaration_Struct struct_declaration = root->contents.struct_declaration;
-            print( struct_declaration.struct_name );
+            print( "{str} :: \\{", struct_declaration.struct_name );
             struct Node *current = struct_declaration.fields;
             struct_declaration.count = 0;
+
+            ArrayList fields = arraylist_new(sizeof(struct User_Field));
+
             while (current != NULL) {
+                struct User_Field field;
                 if (current->node_type == NODE_PARAMETER_LIST) {
                     struct Parameter_List *list = (struct Parameter_List *) &current->contents.parameter_list;
-                    print("\n      .{str}:{str}", list->parameter->contents.variable_declaration.variable_name, list->parameter->contents.variable_declaration.variable_type);
+
+                    field.name = list->parameter->contents.variable_declaration.variable_name;
+                    field.type = list->parameter->contents.variable_declaration.variable_type;
+                    field.size = get_size_for(list->parameter->contents.variable_declaration.variable_type);
+
                     current = list->next;
-                } else if (current->node_type == NODE_VARIABLE_DECLARATION) {
-                    print("\n      .{str}:{str}", current->contents.variable_declaration.variable_name, current->contents.variable_declaration.variable_type);
+                } else { // if (current->node_type == NODE_VARIABLE_DECLARATION) {
+                    field.name = current->contents.variable_declaration.variable_name;
+                    field.type = current->contents.variable_declaration.variable_type;
+                    field.size = get_size_for(current->contents.variable_declaration.variable_type);
 
                     current = NULL;
                 }
+                arraylist_push(&fields, &field);
                 struct_declaration.count++;
             }
-            print("\nFields: {u32}\n", struct_declaration.count);
-//            insert_type(visitor->context, (struct User_Type){
-//               .field_count = struct_declaration.count,
-//               .fields = fields,
-//               .
-//            });
+//            print("\n}\nFields: {u32}\n", struct_declaration.count);
+            struct User_Type type = {
+                .field_count = struct_declaration.count,
+                .fields = malloc(sizeof(struct User_Field) * struct_declaration.count),
+                .identifier = struct_declaration.struct_name
+            };
+            u32 i = 0;
+            forward_it(fields, struct User_Field) {
+                print("\n\t{str}: {str} -> {u32}", it->name, it->type, it->size);
+                type.fields[i++] = *it;
+            }
+            print("\n}\n");
+            insert_type(visitor->context, type);
 
         } break;
         case NODE_PARAMETER_LIST: {
@@ -75,6 +94,15 @@ void collect_symbols(struct Visitor *_visitor, struct Node *root) {
             // Do nothing. We don't care about this.
         } break;
     }
+}
+
+u32 get_size_for( Str type ) {
+    if ( str_eq( type, str_from_cstr("i32") ) == true ) {
+        return 4;
+    } else if ( str_eq( type, str_from_cstr("i64") ) == true ) {
+        return 8;
+    }
+    return 0;
 }
 
 void insert_function( struct Symbol_Visitor *visitor, struct Declaration_Function *fn ) {

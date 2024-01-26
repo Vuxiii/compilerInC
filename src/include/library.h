@@ -88,7 +88,7 @@ void str_register(char * format, Str (* printer)(va_list * args));
 
 #endif
 #ifdef LIBS_IMPLEMENTATION
-
+#include <string.h>
 ArrayList arraylist_new(u32 elem_size) {
     ArrayList list = {
         .len = 0,
@@ -111,9 +111,10 @@ void arraylist_push(ArrayList * list, void * elem) {
         assert(list->data); // Failed to reallocate memory.
     }
     u32 offset = list->len * list->elem_size;
-    for (u32 i = 0; i < list->elem_size; i++) {
-        ((char *) list->data)[offset + i] = ((char *) elem)[i];
-    }
+    memcpy((char*)list->data + offset, elem, list->elem_size);
+//    for (u32 i = 0; i < list->elem_size; i++) {
+//        ((char *) list->data)[offset + i] = ((char *) elem)[i];
+//    }
     list->len++;
 }
 
@@ -438,8 +439,8 @@ static Str str_Printer(va_list * args) {
     return str;
 }
 
-#if defined(__clang__)
-static void init_printers(void) __attribute__((constructor)) {
+//#if defined(__clang__)
+static void init_printers(void) { //__attribute__((constructor)) {
     str_register("{i32}", i32_Printer);
     str_register("{u32}", u32_Printer);
     str_register("{i64}", i64_Printer);
@@ -449,7 +450,7 @@ static void init_printers(void) __attribute__((constructor)) {
     str_register("{bool}", bool_Printer);
     str_register("{str}", str_Printer);
 }
-#endif
+//#endif
 
 static inline Str str_format_impl(Str format, va_list args ) {
     ArrayList strs = arraylist_new(sizeof(Str));

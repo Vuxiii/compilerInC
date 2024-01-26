@@ -321,6 +321,30 @@ src/visitor/symbols.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/src/visitor/symbols.c.s
 .PHONY : src/visitor/symbols.c.s
 
+src/visitor/typechecker.o: src/visitor/typechecker.c.o
+.PHONY : src/visitor/typechecker.o
+
+# target to build an object file
+src/visitor/typechecker.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/src/visitor/typechecker.c.o
+.PHONY : src/visitor/typechecker.c.o
+
+src/visitor/typechecker.i: src/visitor/typechecker.c.i
+.PHONY : src/visitor/typechecker.i
+
+# target to preprocess a source file
+src/visitor/typechecker.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/src/visitor/typechecker.c.i
+.PHONY : src/visitor/typechecker.c.i
+
+src/visitor/typechecker.s: src/visitor/typechecker.c.s
+.PHONY : src/visitor/typechecker.s
+
+# target to generate assembly for a file
+src/visitor/typechecker.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/src/visitor/typechecker.c.s
+.PHONY : src/visitor/typechecker.c.s
+
 src/visitor/visitor.o: src/visitor/visitor.c.o
 .PHONY : src/visitor/visitor.o
 
@@ -402,6 +426,9 @@ help:
 	@echo "... src/visitor/symbols.o"
 	@echo "... src/visitor/symbols.i"
 	@echo "... src/visitor/symbols.s"
+	@echo "... src/visitor/typechecker.o"
+	@echo "... src/visitor/typechecker.i"
+	@echo "... src/visitor/typechecker.s"
 	@echo "... src/visitor/visitor.o"
 	@echo "... src/visitor/visitor.i"
 	@echo "... src/visitor/visitor.s"

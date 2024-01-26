@@ -4,11 +4,16 @@
 #include "defines.h"
 #include "include/library.h"
 
+struct User_Field {
+    Str name;
+    Str type;
+    u32 size;
+};
+
 struct User_Type {
     Str identifier;
     u32 field_count;
-    ARRAY(uint32_t) size;
-    ARRAY(Str) fields;
+    ARRAY(struct User_Field) fields;
 };
 
 struct Result_User_Type get_type(struct Context *context, u32 descriptor );

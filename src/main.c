@@ -4,6 +4,7 @@
 #include "x86.h"
 #include "visitor/symbols.h"
 #include "visitor/visitor.h"
+#include "visitor/typechecker.h"
 #include "types.h"
 #define LIBS_IMPLEMENTATION
 #include "include/library.h"
@@ -21,7 +22,8 @@
 
 struct Node *NODE_BUFFER;
 
-int main( int argc, char **argv ) { 
+int main( int argc, char **argv ) {
+    init_printers();
 
     char *filename;
     if (argc == 1) {
@@ -63,6 +65,7 @@ int main( int argc, char **argv ) {
 
     struct Visitor symbol_visitor = (struct Visitor) {
         .kind = SYMBOL_VISITOR,
+        .pre_visit = collect_symbols,
         .contents.symbol_visitor = (struct Symbol_Visitor) {
             .context = &context,
 
@@ -74,7 +77,6 @@ int main( int argc, char **argv ) {
 
     visit(root, &symbol_visitor);
 
-    
     for (uint64_t i = 0; i < symbol_visitor.contents.symbol_visitor.function_count; ++i) {
         // Each function
         struct Symbol_Table *table = symbol_visitor.contents.symbol_visitor.functions[i];
@@ -85,6 +87,10 @@ int main( int argc, char **argv ) {
                 print("\tSymbol [{str}]\n", table->symbol_table.items[j].key);
          }
     }
+
+    // Type check
+
+
 
 
     // struct Runtime runtime = (struct Runtime) {

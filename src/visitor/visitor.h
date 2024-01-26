@@ -6,7 +6,8 @@
 #include "../include/library.h"
 
 enum Visitor_Kind {
-    SYMBOL_VISITOR
+    SYMBOL_VISITOR,
+    TYPECHECKER_VISITOR,
 };
 
 enum Visitor_State {
@@ -25,6 +26,10 @@ struct Symbol_Visitor {
     ARRAY(struct Symbol_Table *) functions;
 };
 
+struct TypeChecker_Visitor {
+    struct Context *context;
+};
+
 struct Symbol_Table {
     struct Declaration_Function *fn;
     struct HashTable symbol_table;
@@ -33,8 +38,12 @@ struct Symbol_Table {
 struct Visitor {
     enum Visitor_Kind kind;
     enum Visitor_State state;
+    void (*pre_visit)(struct Visitor *visitor, struct Node *node);
+    void (*mid_visit)(struct Visitor *visitor, struct Node *node);
+    void (*post_visit)(struct Visitor *visitor, struct Node *node);
     union {
         struct Symbol_Visitor symbol_visitor;
+        struct TypeChecker_Visitor typechecker_visitor;
     } contents;
 };
 

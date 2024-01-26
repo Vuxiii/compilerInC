@@ -181,10 +181,24 @@ CMakeFiles/compiler.dir/src/visitor/symbols.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/compiler.dir/src/visitor/symbols.c.s"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/not_archbtw/dev/c/compilerInC/src/visitor/symbols.c -o CMakeFiles/compiler.dir/src/visitor/symbols.c.s
 
+CMakeFiles/compiler.dir/src/visitor/typechecker.c.o: CMakeFiles/compiler.dir/flags.make
+CMakeFiles/compiler.dir/src/visitor/typechecker.c.o: src/visitor/typechecker.c
+CMakeFiles/compiler.dir/src/visitor/typechecker.c.o: CMakeFiles/compiler.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/not_archbtw/dev/c/compilerInC/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object CMakeFiles/compiler.dir/src/visitor/typechecker.c.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/compiler.dir/src/visitor/typechecker.c.o -MF CMakeFiles/compiler.dir/src/visitor/typechecker.c.o.d -o CMakeFiles/compiler.dir/src/visitor/typechecker.c.o -c /Users/not_archbtw/dev/c/compilerInC/src/visitor/typechecker.c
+
+CMakeFiles/compiler.dir/src/visitor/typechecker.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/compiler.dir/src/visitor/typechecker.c.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/not_archbtw/dev/c/compilerInC/src/visitor/typechecker.c > CMakeFiles/compiler.dir/src/visitor/typechecker.c.i
+
+CMakeFiles/compiler.dir/src/visitor/typechecker.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/compiler.dir/src/visitor/typechecker.c.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/not_archbtw/dev/c/compilerInC/src/visitor/typechecker.c -o CMakeFiles/compiler.dir/src/visitor/typechecker.c.s
+
 CMakeFiles/compiler.dir/src/visitor/visitor.c.o: CMakeFiles/compiler.dir/flags.make
 CMakeFiles/compiler.dir/src/visitor/visitor.c.o: src/visitor/visitor.c
 CMakeFiles/compiler.dir/src/visitor/visitor.c.o: CMakeFiles/compiler.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/not_archbtw/dev/c/compilerInC/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object CMakeFiles/compiler.dir/src/visitor/visitor.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/not_archbtw/dev/c/compilerInC/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building C object CMakeFiles/compiler.dir/src/visitor/visitor.c.o"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/compiler.dir/src/visitor/visitor.c.o -MF CMakeFiles/compiler.dir/src/visitor/visitor.c.o.d -o CMakeFiles/compiler.dir/src/visitor/visitor.c.o -c /Users/not_archbtw/dev/c/compilerInC/src/visitor/visitor.c
 
 CMakeFiles/compiler.dir/src/visitor/visitor.c.i: cmake_force
@@ -198,7 +212,7 @@ CMakeFiles/compiler.dir/src/visitor/visitor.c.s: cmake_force
 CMakeFiles/compiler.dir/src/x86.c.o: CMakeFiles/compiler.dir/flags.make
 CMakeFiles/compiler.dir/src/x86.c.o: src/x86.c
 CMakeFiles/compiler.dir/src/x86.c.o: CMakeFiles/compiler.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/not_archbtw/dev/c/compilerInC/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building C object CMakeFiles/compiler.dir/src/x86.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/not_archbtw/dev/c/compilerInC/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building C object CMakeFiles/compiler.dir/src/x86.c.o"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/compiler.dir/src/x86.c.o -MF CMakeFiles/compiler.dir/src/x86.c.o.d -o CMakeFiles/compiler.dir/src/x86.c.o -c /Users/not_archbtw/dev/c/compilerInC/src/x86.c
 
 CMakeFiles/compiler.dir/src/x86.c.i: cmake_force
@@ -219,6 +233,7 @@ compiler_OBJECTS = \
 "CMakeFiles/compiler.dir/src/main.c.o" \
 "CMakeFiles/compiler.dir/src/types.c.o" \
 "CMakeFiles/compiler.dir/src/visitor/symbols.c.o" \
+"CMakeFiles/compiler.dir/src/visitor/typechecker.c.o" \
 "CMakeFiles/compiler.dir/src/visitor/visitor.c.o" \
 "CMakeFiles/compiler.dir/src/x86.c.o"
 
@@ -233,11 +248,12 @@ compiler: CMakeFiles/compiler.dir/src/interpreter.c.o
 compiler: CMakeFiles/compiler.dir/src/main.c.o
 compiler: CMakeFiles/compiler.dir/src/types.c.o
 compiler: CMakeFiles/compiler.dir/src/visitor/symbols.c.o
+compiler: CMakeFiles/compiler.dir/src/visitor/typechecker.c.o
 compiler: CMakeFiles/compiler.dir/src/visitor/visitor.c.o
 compiler: CMakeFiles/compiler.dir/src/x86.c.o
 compiler: CMakeFiles/compiler.dir/build.make
 compiler: CMakeFiles/compiler.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/not_archbtw/dev/c/compilerInC/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking C executable compiler"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/not_archbtw/dev/c/compilerInC/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking C executable compiler"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/compiler.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

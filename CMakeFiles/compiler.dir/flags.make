@@ -6,7 +6,7 @@ C_DEFINES =
 
 C_INCLUDES = 
 
-C_FLAGSarm64 = -std=gnu17 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk -Wall -Wextra -pedantic -I/Users/not_archbtw/dev/c/compilerInC/src/include
+C_FLAGSarm64 = -std=gnu17 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk -g -Wall -Wextra -pedantic -I/Users/not_archbtw/dev/c/compilerInC/src/include
 
-C_FLAGS = -std=gnu17 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk -Wall -Wextra -pedantic -I/Users/not_archbtw/dev/c/compilerInC/src/include
+C_FLAGS = -std=gnu17 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk -g -Wall -Wextra -pedantic -I/Users/not_archbtw/dev/c/compilerInC/src/include
 

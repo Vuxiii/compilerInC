@@ -16,6 +16,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/not_archbtw/dev/c/compilerInC/src/main.c" "CMakeFiles/compiler.dir/src/main.c.o" "gcc" "CMakeFiles/compiler.dir/src/main.c.o.d"
   "/Users/not_archbtw/dev/c/compilerInC/src/types.c" "CMakeFiles/compiler.dir/src/types.c.o" "gcc" "CMakeFiles/compiler.dir/src/types.c.o.d"
   "/Users/not_archbtw/dev/c/compilerInC/src/visitor/symbols.c" "CMakeFiles/compiler.dir/src/visitor/symbols.c.o" "gcc" "CMakeFiles/compiler.dir/src/visitor/symbols.c.o.d"
+  "/Users/not_archbtw/dev/c/compilerInC/src/visitor/typechecker.c" "CMakeFiles/compiler.dir/src/visitor/typechecker.c.o" "gcc" "CMakeFiles/compiler.dir/src/visitor/typechecker.c.o.d"
   "/Users/not_archbtw/dev/c/compilerInC/src/visitor/visitor.c" "CMakeFiles/compiler.dir/src/visitor/visitor.c.o" "gcc" "CMakeFiles/compiler.dir/src/visitor/visitor.c.o.d"
   "/Users/not_archbtw/dev/c/compilerInC/src/x86.c" "CMakeFiles/compiler.dir/src/x86.c.o" "gcc" "CMakeFiles/compiler.dir/src/x86.c.o.d"
   )

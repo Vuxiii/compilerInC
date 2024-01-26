@@ -823,6 +823,7 @@ CMakeFiles/compiler.dir/src/main.c.o: src/main.c \
   src/frontend/token.h \
   src/include/library.h \
   src/visitor/symbols.h \
+  src/visitor/typechecker.h \
   src/visitor/visitor.h \
   src/x86.h
 
@@ -1096,6 +1097,9 @@ CMakeFiles/compiler.dir/src/visitor/symbols.c.o: src/visitor/symbols.c \
   src/types.h \
   src/visitor/symbols.h \
   src/visitor/visitor.h
+
+CMakeFiles/compiler.dir/src/visitor/typechecker.c.o: src/visitor/typechecker.c \
+  src/visitor/typechecker.h
 
 CMakeFiles/compiler.dir/src/visitor/visitor.c.o: src/visitor/visitor.c \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk/usr/include/Availability.h \
@@ -1386,6 +1390,8 @@ src/visitor/visitor.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_filesec_t.h:
 
+src/visitor/typechecker.c:
+
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_blksize_t.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_blkcnt_t.h:
@@ -1659,6 +1665,8 @@ src/types.c:
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk/usr/include/sys/_types/_useconds_t.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk/usr/include/_types/_uintmax_t.h:
+
+src/visitor/typechecker.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk/usr/include/_ctype.h:
 

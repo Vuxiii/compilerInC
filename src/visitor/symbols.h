@@ -13,3 +13,5 @@ void insert_function( struct Symbol_Visitor *visitor, struct Declaration_Functio
 struct Symbol_Table *current_symbol_table( struct Symbol_Visitor *visitor );
 
 struct Symbol_Table *get_symbol_table( struct Symbol_Visitor *visitor, Str function_name );
+
+u32 get_size_for( Str type );

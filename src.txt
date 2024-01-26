@@ -1,13 +1,22 @@
 
-fn struct_function() {
+fn struct_function(param1: i32) {
     let my_struct :: struct {
-        a: int,
-        b: string,
-        nested: my_struct
+        a: i32,
+        b: i64
     };
+
+    let b: my_struct;
+    b.a = 1;
+    b.b = 2;
+
+    let c: my_struct = b;
+
+    let sum: i32;
+    sum = c.a + c.b;
+
 }
 
-$
+
 fn parameter_function(a: int, b: double) {
 
 }

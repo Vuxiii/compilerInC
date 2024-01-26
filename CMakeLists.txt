@@ -24,12 +24,16 @@ set(SOURCES
         ${SRC_DIR}/types.h
         ${SRC_DIR}/visitor/symbols.c
         ${SRC_DIR}/visitor/symbols.h
+        ${SRC_DIR}/visitor/typechecker.h
+        ${SRC_DIR}/visitor/typechecker.c
         ${SRC_DIR}/visitor/visitor.c
         ${SRC_DIR}/visitor/visitor.h
         ${SRC_DIR}/x86.c
         ${SRC_DIR}/x86.h
 )
+set(CMAKE_REQUIRED_LINK_OPTIONS "-arch;x86_64")
 
+set(CMAKE_REQUIRED_LINK_OPTIONS "-arch;arm64")
 # Add executable
 add_executable(compiler ${SOURCES})
 # Set C standard to C17
@@ -38,7 +42,7 @@ set_target_properties(compiler PROPERTIES
         C_STANDARD_REQUIRED ON
 )
 # Set compiler flags
-target_compile_options(compiler PRIVATE -Wall -Wextra -pedantic)
+target_compile_options(compiler PRIVATE -g -Wall -Wextra -pedantic)
 
 # Optionally set additional compiler options or include directories
  target_compile_options(compiler PRIVATE -I${SRC_DIR}/include)

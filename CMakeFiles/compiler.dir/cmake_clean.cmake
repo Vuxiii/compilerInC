@@ -15,6 +15,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/compiler.dir/src/types.c.o.d"
   "CMakeFiles/compiler.dir/src/visitor/symbols.c.o"
   "CMakeFiles/compiler.dir/src/visitor/symbols.c.o.d"
+  "CMakeFiles/compiler.dir/src/visitor/typechecker.c.o"
+  "CMakeFiles/compiler.dir/src/visitor/typechecker.c.o.d"
   "CMakeFiles/compiler.dir/src/visitor/visitor.c.o"
   "CMakeFiles/compiler.dir/src/visitor/visitor.c.o.d"
   "CMakeFiles/compiler.dir/src/x86.c.o"

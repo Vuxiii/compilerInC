@@ -4,13 +4,11 @@
 
 void visit( struct Node *node, struct Visitor *visitor ) {
     visitor->state = VISITOR_NODE_ENTER;
-    switch (visitor->kind) {
-        case SYMBOL_VISITOR: {
 
-            collect_symbols( visitor, node );
-
-        } break;
+    if ( visitor->pre_visit != NULL ) {
+        visitor->pre_visit(visitor, node);
     }
+
     if (node) {
     switch (node->node_type) {
         case NODE_COMPOUND_STATEMENT: {
@@ -83,12 +81,7 @@ void visit( struct Node *node, struct Visitor *visitor ) {
     }
     }
     visitor->state = VISITOR_NODE_LEAVE;
-    // switch (visitor->kind) {
-    //     case SYMBOL_VISITOR: {
-
-    //         collect_symbols( visitor->contents.symbol_visitor.context, node );
-
-    //     } break;
-    // }
-
+    if ( visitor->post_visit != NULL ) {
+        visitor->post_visit(visitor, node);
+    }
 }

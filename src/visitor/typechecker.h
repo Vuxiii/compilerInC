@@ -1,0 +1,8 @@
+//
+// Created by William Juhl on 26/01/2024.
+//
+
+#ifndef COMPILERINC_TYPECHECKER_H
+#define COMPILERINC_TYPECHECKER_H
+
+#endif //COMPILERINC_TYPECHECKER_H
